@@ -13,14 +13,23 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('uploader_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('category_id');
 
             $table->string('title');
             $table->text('description');
-            $table->string('file_url');
-            $table->unsignedDecimal('price');
-            $table->timestamps(); // Upload date == created_at
+            // $table->string('file_url');
 
+            $table->unsignedDecimal('price');
+            $table->boolean('free')->default(false);
+
+            $table->string('cover_path');
+            $table->string('pdf_path');
+            $table->string('zip_path');
+
+            $table->timestamps(); // Upload_date == created_at
+
+            $table->foreign('category_id')->references('id')->on('categories')->nullOnDelete();
             $table->foreign('uploader_id')->references('id')->on('users')->nullOnDelete();
         });
     }

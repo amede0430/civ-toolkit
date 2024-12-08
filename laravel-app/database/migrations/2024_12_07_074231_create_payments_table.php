@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('product_id');
             $table->unsignedDecimal('amount');
             $table->string('payment_method');
-            $table->string('status');
 
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->timestamps(); // payment_date == created_at
