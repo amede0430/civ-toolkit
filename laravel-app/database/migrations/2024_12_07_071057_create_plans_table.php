@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable();
 
             $table->string('title');
             $table->text('description');
@@ -29,8 +29,8 @@ return new class extends Migration
 
             $table->timestamps(); // Upload_date == created_at
 
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->foreign('category_id')->references('id')->on('categories')->nullOnDelete();
-            $table->foreign('uploader_id')->references('id')->on('users')->nullOnDelete();
         });
     }
 
