@@ -43,5 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('admin')->middleware('admin')->group(function () {
         // Ajoutez d'autres routes spécifiques aux administrateurs ici.
         Route::apiResource('categories', CategorieController::class);
+        Route::apiResource('users', UserController::class);
     });
 });
