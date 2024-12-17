@@ -4,6 +4,8 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategorieController;
 use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\CommentController;
+use App\Http\Controllers\API\RatingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,12 +26,15 @@ use Illuminate\Support\Facades\Route;
 // Auth routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-;
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     // Route::apiResource("users", UserController::class);
+
+    // Routes pour la gestion des appreciations (notes et commentaires)
+    Route::apiResource('comments', CommentController::class);
+    Route::apiResource('ratings', RatingController::class);
 
     // Groupe pour les clients (custumer)
     Route::prefix('custumer')->middleware('custumer')->group(function () {
@@ -38,7 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Groupe pour les ingénieurs (engineer)
     Route::prefix('engineer')->middleware('engineer')->group(function () {
-
         Route::apiResource('plans', PlanController::class);
     });
 
