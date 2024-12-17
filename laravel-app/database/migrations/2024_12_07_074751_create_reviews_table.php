@@ -26,7 +26,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('plan_id');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->text('comment');
+            $table->text('comment');// payment_date == created_at
 
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
