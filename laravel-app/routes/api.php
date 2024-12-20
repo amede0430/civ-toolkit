@@ -6,7 +6,7 @@ use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\RatingController;
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Groupe pour les ingénieurs (engineer)
+    // Route::post('engineer/plans', [PlanController::class, 'store']);
     Route::prefix('engineer')->middleware('engineer')->group(function () {
         Route::apiResource('plans', PlanController::class);
     });
