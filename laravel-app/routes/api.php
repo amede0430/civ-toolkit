@@ -42,10 +42,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Groupe pour les ingénieurs (engineer)
-    Route::post('engineer/plans', [PlanController::class, 'store']);
-    // Route::prefix('engineer')->middleware('engineer')->group(function () {
-    //     Route::apiResource('plans', PlanController::class);
-    // });
+    // Route::post('engineer/plans', [PlanController::class, 'store']);
+    Route::prefix('engineer')->middleware('engineer')->group(function () {
+        Route::apiResource('plans', PlanController::class);
+    });
 
     // Groupe pour les administrateurs (admin)
     Route::prefix('admin')->middleware('admin')->group(function () {
