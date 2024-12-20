@@ -11,17 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ratings', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('plan_id');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedTinyInteger('rating');
-
-            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
-            $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
-            $table->timestamps();
-        });
-
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('plan_id');
@@ -40,6 +29,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('comments');
-        Schema::dropIfExists('ratings');
     }
 };
