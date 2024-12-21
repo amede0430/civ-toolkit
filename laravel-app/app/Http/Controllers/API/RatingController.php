@@ -15,7 +15,7 @@ class RatingController extends Controller
      */
     public function index()
     {
-        return response()->json(Rating::with(['user', 'plan'])->where('user_id', Auth::id())->get(), 200);
+        return response()->json(Rating::with('plan')->where('user_id', Auth::id())->get());
     }
 
     /**
@@ -53,7 +53,7 @@ class RatingController extends Controller
         if (!$rating) {
             return response()->json(['message' => 'Note non trouvee'], 404);
         }
-        return response()->json($rating, 200);
+        return response()->json($rating);
     }
 
 
@@ -84,7 +84,10 @@ class RatingController extends Controller
             ['rating' => $request->rating]
         );
 
-        return response()->json(['message' => "Note mise a jour avec succes", 'rating' => $rating]);
+        return response()->json([
+            'message' => "Note mise a jour avec succes",
+            'rating' => $rating
+        ]);
     }
 
     /**
