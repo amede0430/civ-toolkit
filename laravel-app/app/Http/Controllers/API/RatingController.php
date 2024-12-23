@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\RatingNotificationMailable;
 use Illuminate\Http\Request;
 use App\Models\Rating;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Plan;
 
 class RatingController extends Controller
 {
@@ -24,7 +28,7 @@ class RatingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
+            // 'user_id' => 'required|exists:users,id',
             'plan_id' => 'required|exists:plans,id',
             'rating' => 'required|integer|min:1|max:5',
         ]);
@@ -40,6 +44,8 @@ class RatingController extends Controller
             ],
             ['rating' => $request->rating]
         );
+
+        Mail::to(User::find(Plan::find($rating->plan_id)->user_id)->email)->send(new RatingNotificationMailable($rating));
 
         return response()->json(['message' => 'Note sauvegardee avec succes', 'rating' => $rating]);
     }

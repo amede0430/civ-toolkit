@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SoumissionPlanMailable;
 use App\Models\Plan;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -51,7 +54,7 @@ class PlanController extends Controller
         $zipPath = $request->file('zip_path')->store('zips', 'public');
 
         // Création du plan avec les chemins des fichiers
-        $plan = Plan::create([
+        $plan = [
             'user_id' => Auth::id(),
             'category_id' => $validated['category_id'],
             'title' => $validated['title'],
@@ -61,7 +64,12 @@ class PlanController extends Controller
             'cover_path' => $coverPath,
             'pdf_path' => $pdfPath,
             'zip_path' => $zipPath,
-        ]);
+        ];
+
+        Mail::to(User::where('role', 'admin')->first()->email)->send(new SoumissionPlanMailable($plan));
+
+        // Création du plan
+        $plan = Plan::create($plan);
 
         // Ajouter les URLs des fichiers à la réponse
         $plan->cover_path = asset('storage/' . $plan->cover_path);
