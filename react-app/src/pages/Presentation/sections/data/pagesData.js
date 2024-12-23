@@ -30,14 +30,8 @@ export default [
   {
     image:
       "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/material-design-system/presentation/account/signin-basic.jpg",
-    name: "Sign Up Page",
-    route: "/pages/inscription/sign-up",
-  },
-  {
-    image:
-      "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/material-design-system/presentation/account/signin-basic.jpg",
     name: "Sign In Page",
-    route: "/pages/authentication/sign-in",
+    route: "/pages/authentification/sign-in",
   },
   {
     image: `${imagesPrefix}/author.jpg`,

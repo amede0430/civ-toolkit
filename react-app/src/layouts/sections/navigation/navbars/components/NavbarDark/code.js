@@ -13,9 +13,9 @@ function NavbarDark() {
       <DefaultNavbar
         routes={routes}
         action={{
-          type: "internal",
+          type: "external",
           route: "https://www.creative-tim.com/product/material-kit-react",
-          label: "se connecter",
+          label: "free download",
           color: "info",
         }}
         transparent

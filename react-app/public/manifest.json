@@ -1,9 +1,9 @@
 {
-  "short_name": "Civ ToolKit",
-  "name": "ToolKit for Civil Engineer",
+  "short_name": "Material Kit",
+  "name": "Material Kit 2 React",
   "icons": [
     {
-      "src": "logo1.png",
+      "src": "favicon.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/png"
     }

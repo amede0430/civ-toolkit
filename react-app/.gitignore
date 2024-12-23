@@ -1,1 +1,14 @@
-.vercel
+# Exclusions Laravel
+Laravel-app/vendor/
+Laravel-app/.env
+
+# Exclusions React
+react-app/node_modules/
+react-app/build/
+react-app/.cache/
+
+# Général
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

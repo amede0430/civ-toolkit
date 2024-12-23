@@ -1,25 +1,5 @@
-/*
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// prop-types is library for typechecking of props
 import PropTypes from "prop-types";
-
-// @mui material components
 import Icon from "@mui/material/Icon";
-
-// Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKAvatar from "components/MKAvatar";
 import MKTypography from "components/MKTypography";
@@ -163,13 +143,11 @@ function DefaultReviewCard({ color, image, name, date, review, rating }) {
   );
 }
 
-// Setting default values for the props of DefaultReviewCard
 DefaultReviewCard.defaultProps = {
   color: "transparent",
   image: "",
 };
 
-// Typechecking props for the DefaultReviewCard
 DefaultReviewCard.propTypes = {
   color: PropTypes.oneOf([
     "transparent",

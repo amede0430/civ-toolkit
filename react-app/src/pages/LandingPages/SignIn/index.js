@@ -1,41 +1,15 @@
-/**
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState } from "react";
-
-// react-router-dom components
+import { useNavigate } from "react-router-dom"; // Pour redirection
 import { Link } from "react-router-dom";
-
-// @mui material components
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
-
-// @mui icons
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import GoogleIcon from "@mui/icons-material/Google";
-
-// Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import MKInput from "components/MKInput";
 import MKButton from "components/MKButton";
 
-// Material Kit 2 React example components
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import SimpleFooter from "examples/Footers/SimpleFooter";
 
@@ -47,8 +21,25 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 function SignInBasic() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false); // Nouvelle option pour admin
+  const navigate = useNavigate(); // Hook pour la navigation
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  // Fonction pour gérer la soumission du formulaire
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    // Exemple de validation simple
+    if (isAdmin && email === "admin@example.com" && password === "admin123") {
+      navigate("/dashboard"); // Redirection vers le tableau de bord admin
+    } else if (!isAdmin && email === "user@example.com" && password === "user123") {
+      navigate("/presentation"); // Redirection vers une page utilisateur
+    } else {
+      alert("Identifiants incorrects !");
+    }
+  };
 
   return (
     <>
@@ -56,7 +47,7 @@ function SignInBasic() {
         routes={routes}
         action={{
           type: "internal",
-          route: "/pages/authentication/sign-in",
+          route: "/pages/authentification/sign-in",
           label: "se connecter",
           color: "info",
         }}
@@ -99,31 +90,38 @@ function SignInBasic() {
                 <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
                   Sign in
                 </MKTypography>
-                <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-                  <Grid item xs={2}>
-                    <MKTypography component={MuiLink} href="#" variant="body1" color="white">
-                      <FacebookIcon color="inherit" />
-                    </MKTypography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <MKTypography component={MuiLink} href="#" variant="body1" color="white">
-                      <GitHubIcon color="inherit" />
-                    </MKTypography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <MKTypography component={MuiLink} href="#" variant="body1" color="white">
-                      <GoogleIcon color="inherit" />
-                    </MKTypography>
-                  </Grid>
-                </Grid>
               </MKBox>
               <MKBox pt={4} pb={3} px={3}>
-                <MKBox component="form" role="form">
+                <MKBox component="form" role="form" onSubmit={handleSignIn}>
                   <MKBox mb={2}>
-                    <MKInput type="email" label="Email" fullWidth />
+                    <MKInput
+                      type="email"
+                      label="Email"
+                      fullWidth
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </MKBox>
                   <MKBox mb={2}>
-                    <MKInput type="password" label="Password" fullWidth />
+                    <MKInput
+                      type="password"
+                      label="Password"
+                      fullWidth
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </MKBox>
+                  <MKBox display="flex" alignItems="center" ml={-1} mb={2}>
+                    <Switch checked={isAdmin} onChange={() => setIsAdmin(!isAdmin)} />
+                    <MKTypography
+                      variant="button"
+                      fontWeight="regular"
+                      color="text"
+                      onClick={() => setIsAdmin(!isAdmin)}
+                      sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                    >
+                      &nbsp;&nbsp;Se connecter en tant qu'admin
+                    </MKTypography>
                   </MKBox>
                   <MKBox display="flex" alignItems="center" ml={-1}>
                     <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -138,8 +136,8 @@ function SignInBasic() {
                     </MKTypography>
                   </MKBox>
                   <MKBox mt={4} mb={1}>
-                    <MKButton variant="gradient" color="info" fullWidth>
-                      sign in
+                    <MKButton type="submit" variant="gradient" color="info" fullWidth>
+                      Sign in
                     </MKButton>
                   </MKBox>
                   <MKBox mt={3} mb={1} textAlign="center">
@@ -147,7 +145,7 @@ function SignInBasic() {
                       Don&apos;t have an account?{" "}
                       <MKTypography
                         component={Link}
-                        to="/pages/authentication/sign-up"
+                        to="/authentification/sign-up/cover"
                         variant="button"
                         color="info"
                         fontWeight="medium"

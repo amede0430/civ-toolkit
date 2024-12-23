@@ -42,7 +42,7 @@ function Author() {
         action={{
           type: "external",
           route: "https://www.creative-tim.com/product/material-kit-react",
-          label: "se connecter",
+          label: "free download",
           color: "info",
         }}
         transparent

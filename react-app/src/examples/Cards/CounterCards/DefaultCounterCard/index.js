@@ -1,25 +1,5 @@
-/*
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
-
-// react-countup component
 import CountUp from "react-countup";
-
-// Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 
@@ -43,14 +23,12 @@ function DefaultCounterCard({ color, count, title, description, ...rest }) {
   );
 }
 
-// Setting default props for the DefaultCounterCard
 DefaultCounterCard.defaultProps = {
   color: "info",
   description: "",
   title: "",
 };
 
-// Typechecking props for the DefaultCounterCard
 DefaultCounterCard.propTypes = {
   color: PropTypes.oneOf([
     "primary",

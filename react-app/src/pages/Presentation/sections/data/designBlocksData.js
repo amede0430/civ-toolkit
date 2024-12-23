@@ -12,7 +12,6 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-
 import carte_ville from "assets/images/products/carte-ville-londres-est-posee-table-bois_1143726-16528.jpg";
 import morceau_papier_bleu from "assets/images/products/morceau-papier-bleu-tasse-cafe-tasse-cafe-dessus_1143726-16485.jpg";
 import plans_architecturaux from  "assets/images/products/plans-architecturaux-plans-conception-technique-presentant-plans-construction-complexes-ingenieur_1143726-16443.jpg";
@@ -27,11 +26,13 @@ import calculatrice from "assets/images/products/calculatrice-papier_23-21481483
 import cahier from "assets/images/products/cahier-rouge-blanc-stylo-au-dessus_979014-10338.jpg";
 import bleu from "assets/images/products/calculatrice-bleue-crayon-vert-stylo-dessus_806553-38241.jpg";
 
+const imagesPrefix =
+  "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/material-design-system/presentation/sections";
 
 export default [
   {
     title: "Plans de Constructions ",
-    description: "A selection of 45 page sections that fit perfectly in any combination",
+    description: "Des plans complets et détaillés conçus par des experts du bâtiment, avec toutes les informations essentielles en un seul endroiA selection of 45 page sections that fit perfectly in any combination",
     items: [
       {
         image: carte_ville,  // Chemin vers l'image locale
@@ -51,29 +52,11 @@ export default [
         count: 8,
         pro: true,
       },
-      {
-        image: vue,  // Chemin vers l'image locale
-        name: "FAQ",
-        count: 1,
-        pro: true,
-      },
-      {
-        image: projet_architecture,  // Chemin vers l'image locale
-        name: "Blog Posts",
-        count: 11,
-        pro: true,
-      },
-      {
-        image: collaboration_plan,  // Chemin vers l'image locale
-        name: "Testimonials",
-        count: 11,
-        pro: true,
-      },
     ],
   },
   {
     title: "Documents Synthèses",
-    description: "30+ components that will help go through the pages",
+    description: "Un guide essentiel regroupant les données clés pour une vision claire et complète de votre projet.",
     items: [
       {
         image: illustration,  // Chemin vers l'image locale
@@ -97,7 +80,7 @@ export default [
   },
   {
     title: "Feuilles de Calcul",
-    description: "50+ elements that you need for text manipulation and insertion",
+    description: "Des feuilles de calcul dynamiques, parfaitement adaptées à toutes les résolutions et formats d’écran.",
     items: [
       {
         image: fourniture,  // Chemin vers l'image locale
@@ -111,12 +94,7 @@ export default [
         count: 8,
         pro: true,
       },
-      {
-        image: cahier,  // Chemin vers l'image locale
-        name: "Forms",
-        count: 3,
-        route: "/sections/input-areas/forms",
-      },
+     
       {
         image: bleu,  // Chemin vers l'image locale
         name: "Inputs",
@@ -126,3 +104,4 @@ export default [
     ],
   }
 ];
+

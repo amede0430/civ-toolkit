@@ -1,28 +1,7 @@
 /* eslint-disable no-param-reassign */
-/**
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { Fragment, useState, useEffect } from "react";
-
-// react-router components
 import { Link } from "react-router-dom";
-
-// prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
-
-// @mui material components
 import Container from "@mui/material/Container";
 import Icon from "@mui/material/Icon";
 import Popper from "@mui/material/Popper";
@@ -30,17 +9,11 @@ import Grow from "@mui/material/Grow";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import MuiLink from "@mui/material/Link";
-
-// Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import MKButton from "components/MKButton";
-
-// Material Kit 2 React example components
 import DefaultNavbarDropdown from "examples/Navbars/DefaultNavbar/DefaultNavbarDropdown";
 import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMobile";
-
-// Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
 
 function DefaultNavbar({ brand, routes, transparent, light, action, sticky, relative, center }) {
@@ -55,9 +28,9 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   const [mobileView, setMobileView] = useState(false);
 
   const openMobileNavbar = () => setMobileNavbar(!mobileNavbar);
-
+  const navbarRoutes = routes.filter((route) => route.showInNavbar)
+  console.log(navbarRoutes)
   useEffect(() => {
-    // A function that sets the display state for the DefaultNavbarMobile.
     function displayMobileNavbar() {
       if (window.innerWidth < breakpoints.values.lg) {
         setMobileView(true);
@@ -67,21 +40,13 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
         setMobileNavbar(false);
       }
     }
-
-    /** 
-     The event listener that's calling the displayMobileNavbar function when 
-     resizing the window.
-    */
     window.addEventListener("resize", displayMobileNavbar);
 
-    // Call the displayMobileNavbar function to set the state with the initial value.
     displayMobileNavbar();
-
-    // Remove event listener on cleanup
     return () => window.removeEventListener("resize", displayMobileNavbar);
   }, []);
 
-  const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => (
+  const renderNavbarItems = navbarRoutes.map(({ name, icon, href, route, collapse }) => (
     <DefaultNavbarDropdown
       key={name}
       name={name}
@@ -101,11 +66,9 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
     />
   ));
 
-  // Render the routes on the dropdown menu
-  const renderRoutes = routes.map(({ name, collapse, columns, rowsPerColumn }) => {
+  const renderRoutes = navbarRoutes.map(({ name, collapse, columns, rowsPerColumn }) => {
     let template;
 
-    // Render the dropdown menu that should be display as columns
     if (collapse && columns && name === dropdownName) {
       const calculateColumns = collapse.reduce((resultArray, item, index) => {
         const chunkIndex = Math.floor(index / rowsPerColumn);
@@ -190,8 +153,6 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
           })}
         </Grid>
       );
-
-      // Render the dropdown menu that should be display as list items
     } else if (collapse && name === dropdownName) {
       template = collapse.map((item) => {
         const linkComponent = {
@@ -279,7 +240,6 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
     return template;
   });
 
-  // Routes dropdown menu
   const dropdownMenu = (
     <Popper
       anchorEl={dropdown}
@@ -328,8 +288,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
     </Popper>
   );
 
-  // Render routes that are nested inside the dropdown menu routes
-  const renderNestedRoutes = routes.map(({ collapse, columns }) =>
+  const renderNestedRoutes = navbarRoutes.map(({ collapse, columns }) =>
     collapse && !columns
       ? collapse.map(({ name: parentName, collapse: nestedCollapse }) => {
           let template;
@@ -413,7 +372,6 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
       : null
   );
 
-  // Dropdown menu for the nested dropdowns
   const nestedDropdownMenu = (
     <Popper
       anchorEl={nestedDropdown}
@@ -540,7 +498,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
           borderRadius="xl"
           px={transparent ? 2 : 0}
         >
-          {mobileView && <DefaultNavbarMobile routes={routes} open={mobileNavbar} />}
+          {mobileView && <DefaultNavbarMobile routes={navbarRoutes} open={mobileNavbar} />}
         </MKBox>
       </MKBox>
       {dropdownMenu}
@@ -549,9 +507,8 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   );
 }
 
-// Setting default values for the props of DefaultNavbar
 DefaultNavbar.defaultProps = {
-  brand: "Civ ToolKit",
+  brand: "CIV Toolkit",
   transparent: false,
   light: false,
   action: false,
@@ -560,10 +517,9 @@ DefaultNavbar.defaultProps = {
   center: false,
 };
 
-// Typechecking props for the DefaultNavbar
 DefaultNavbar.propTypes = {
   brand: PropTypes.string,
-  routes: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  navbarRoutes: PropTypes.arrayOf(PropTypes.shape).isRequired,
   transparent: PropTypes.bool,
   light: PropTypes.bool,
   action: PropTypes.oneOfType([

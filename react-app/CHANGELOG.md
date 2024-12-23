@@ -39,7 +39,16 @@
 - Typography
 
 ### Added components
-
+- MDAlert
+- MDAvatar
+- MDBadge
+- MDBox
+- MDButton
+- MDInput
+- MDPagination
+- MDProgress
+- MDSnackbar
+- MDTypography
 - MKAlert
 - MKAvatar
 - MKBadge

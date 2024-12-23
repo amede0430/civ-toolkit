@@ -39,9 +39,9 @@ function BaseLayout({ breadcrumb, title, children }) {
         <DefaultNavbar
           routes={routes}
           action={{
-            type: "internal",
-            route: "/pages/authentication/sign-in",
-            label: "se connecter",
+            type: "external",
+            route: "https://www.creative-tim.com/product/material-kit-react",
+            label: "free download",
             color: "info",
           }}
           transparent

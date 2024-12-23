@@ -24,7 +24,7 @@ function SignUpBasic() {
         routes={routes}
         action={{
           type: "internal",
-          route: "/pages/authentication/sign-up",
+          route: "/pages/authentification/sign-up",
           label: "s'inscrire",
           color: "info",
         }}
@@ -109,7 +109,7 @@ function SignUpBasic() {
                       Already have an account?{" "}
                       <MKTypography
                         component={Link}
-                        to="/pages/authentication/sign-in"
+                        to="/pages/authentification/sign-in"
                         variant="button"
                         color="info"
                         fontWeight="medium"

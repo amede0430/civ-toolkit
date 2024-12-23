@@ -22,10 +22,9 @@ import Icon from "@mui/material/Icon";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 
-import bgImage from "assets/images/logo2.png";
-
 function BuiltByDevelopers() {
-  
+  const bgImage =
+    "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/desktop.jpg";
 
   return (
     <MKBox
@@ -47,7 +46,7 @@ function BuiltByDevelopers() {
       <Container>
         <Grid container item xs={12} lg={6} sx={{ ml: { xs: 0, lg: 6 } }}>
           <MKTypography variant="h4" color="white" fontWeight="bold">
-            Conçu par des élèves ingénieurs
+          Conçu par des élèves ingénieurs
           </MKTypography>
           <MKTypography variant="h1" color="white" mb={1}>
             Complex Documentation

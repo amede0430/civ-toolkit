@@ -1,36 +1,35 @@
-// @mui icons
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-
-// Material Kit 2 React components
+// import FacebookIcon from "@mui/icons-material/Facebook";
+// import TwitterIcon from "@mui/icons-material/Twitter";
+// import GitHubIcon from "@mui/icons-material/GitHub";
+// import YouTubeIcon from "@mui/icons-material/YouTube";
 import MKTypography from "components/MKTypography";
-
-// Images
-import logoCT from "assets/images/logo2.png";
+import logoCT from "assets/images/logo-ct-dark.png";
 
 const date = new Date().getFullYear();
 
 export default {
   brand: {
-    name: "Civ ToolKit",
+    name: "CIV Toolkit",
     image: logoCT,
     route: "/",
   },
   socials: [
-    {
-      icon: <FacebookIcon />,
-      link: "https://www.facebook.com/CreativeTim/",
-    },
-    {
-      icon: <TwitterIcon />,
-      link: "https://twitter.com/creativetim",
-    },
-    {
-      icon: <YouTubeIcon />,
-      link: "https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w",
-    },
+    // {
+    //   icon: <FacebookIcon />,
+    //   link: "https://www.facebook.com/CreativeTim/",
+    // },
+    // {
+    //   icon: <TwitterIcon />,
+    //   link: "https://twitter.com/creativetim",
+    // },
+    // {
+    //   icon: <GitHubIcon />,
+    //   link: "https://github.com/creativetimofficial",
+    // },
+    // {
+    //   icon: <YouTubeIcon />,
+    //   link: "https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w",
+    // },
   ],
   menus: [
     {
@@ -70,7 +69,7 @@ export default {
   ],
   copyright: (
     <MKTypography variant="button" fontWeight="regular">
-      All rights reserved. Copyright &copy; {date} Civ ToolKit by{" "}
+      Tous droits réservés. Copyright &copy; {date} CIV Toolkit par{" "}
       <MKTypography
         component="a"
         href="https://www.creative-tim.com"
@@ -79,7 +78,7 @@ export default {
         variant="button"
         fontWeight="regular"
       >
-        Engineering Students -- EPAC
+       Engineering Students -- EPAC
       </MKTypography>
       .
     </MKTypography>
