@@ -80,10 +80,10 @@
             <p>Malheureusement, votre plan n'a pas été retenu. Nous vous invitons à prendre en compte les remarques ci-dessus pour une éventuelle soumission future.</p>
         @endif
 
-        <a href="" class="button">Voir les détails</a>
+        {{-- <a href="" class="button">Voir les détails</a> --}}
 
         <footer>
-            <p>L'équipe de gestion des plans</p>
+            <p>L'équipe de gestion de CIV-TOOLKIT.</p>
         </footer>
     </div>
 </body>

@@ -88,7 +88,7 @@
         {{-- <a href="#" class="button">Voir les détails</a> --}}
 
         <footer>
-            <p>L'équipe de gestion des plans de CIV-TOOLKIT</p>
+            <p>L'équipe de gestion de CIV-TOOLKIT.</p>
         </footer>
     </div>
 </body>

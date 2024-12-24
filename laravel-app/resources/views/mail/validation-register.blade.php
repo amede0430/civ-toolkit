@@ -68,14 +68,14 @@
 <body>
     <div class="container">
         <h1>Confirmation d'inscription</h1>
-        <p>Bonjour M. </strong> <span class="highlight">{{ $data['name'] }}</span>.</p>
-        <p>Vous vous êtes inscrit avec succès sur la plateforme CIV-TOOLKIT en tant que client.</p>
+        <p>Bonjour M. <span class="highlight">{{ $data['name'] }}</span>.</p>
+        <p>Vous vous êtes inscrit avec succès sur la plateforme CIV-TOOLKIT en tant que <span class="highlight">client</span>.</p>
         <p>Merci de votre interêt.</p>
 
         {{-- <a href="#" class="button">Voir les détails</a> --}}
 
         <footer>
-            <p>L'équipe de gestion de CIV-TOOLKIT</p>
+            <p>L'équipe de gestion de CIV-TOOLKIT.</p>
         </footer>
     </div>
 </body>

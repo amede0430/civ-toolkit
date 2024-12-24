@@ -68,7 +68,7 @@
 <body>
     <div class="container">
         <h1>Attribution de note</h1>
-        <p>Bonjour M. </strong> <span class="highlight">{{ $data['engineer'] }}</span>.</p>
+        <p>Bonjour M. <span class="highlight">{{ $data['engineer'] }}</span>.</p>
         <p>Une nouvelle note vient d'être attribuée a l'un de vos plans.</p>
 
         <div class="resource-info">
@@ -77,12 +77,12 @@
             <p><strong>Nouvelle moyenne : </strong> <span class="highlight">{{$data['rating_avg']}}</span></p>
         </div>
 
-        <p>Bien à vous.</p>
+        <p>Bien à vous,</p>
 
         {{-- <a href="#" class="button">Voir les détails</a> --}}
 
         <footer>
-            <p>L'équipe de gestion de CIV-TOOLKIT</p>
+            <p>L'équipe de gestion de CIV-TOOLKIT.</p>
         </footer>
     </div>
 </body>
