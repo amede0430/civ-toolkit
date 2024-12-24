@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification de soumission de ressource</title>
+    <title>Confirmation d'inscription de client</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,24 +68,9 @@
 <body>
     <div class="container">
         <h1>Confirmation d'inscription</h1>
-        <p>Bonjour M. {{$data['name']}},</p>
-        <p>Vous vous êtes inscrit avec succès sur la plateforme CIV-TOOLKIT. Voici vos identifiants de connexion :</p>
-
-        <div class="resource-info">
-            <p><strong>Email : </strong> <span class="highlight">{{ $data['email'] }}</span></p>
-            <p><strong>Mot de passe : </strong> <span class="highlight">{{ $data['password'] }}</span></p>
-            <p><strong>Role : </strong> @if ($data['role'] == 'customer')
-                                            Client                
-                                        @else @if ($data['role'] == 'engineer')
-                                            Ingenieur
-                                        @else
-                                            Administrateur
-                                        @endif @endif
-            </p>
-
-        </div>
-
-        <p>Bien a vous.</p>
+        <p>Bonjour M. </strong> <span class="highlight">{{ $data['name'] }}</span>.</p>
+        <p>Vous vous êtes inscrit avec succès sur la plateforme CIV-TOOLKIT en tant que client.</p>
+        <p>Merci de votre interêt.</p>
 
         {{-- <a href="#" class="button">Voir les détails</a> --}}
 

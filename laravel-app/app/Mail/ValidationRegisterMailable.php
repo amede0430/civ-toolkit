@@ -22,7 +22,7 @@ class ValidationRegisterMailable extends Mailable
     public function __construct($user)
     {
         $this->userData = $user;
-        $sender = User::where('role', 'admin')->first();
+        $this->sender = User::where('role', 'admin')->first();
     }
 
     /**

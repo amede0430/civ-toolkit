@@ -47,7 +47,7 @@ class RatingController extends Controller
 
         Mail::to(User::find(Plan::find($rating->plan_id)->user_id)->email)->send(new RatingNotificationMailable($rating));
 
-        return response()->json(['message' => 'Note sauvegardee avec succes', 'rating' => $rating]);
+        return response()->json(['message' => 'Note sauvegardee avec succes', 'rating' => $rating],201);
     }
 
     /**

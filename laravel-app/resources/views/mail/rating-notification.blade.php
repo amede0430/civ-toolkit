@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification de soumission de ressource</title>
+    <title>Attribution d'une nouvelle note à un plan.</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,15 +68,16 @@
 <body>
     <div class="container">
         <h1>Attribution de note</h1>
-        <p>Bonjour M. {{$data['engineer']}},</p>
+        <p>Bonjour M. </strong> <span class="highlight">{{ $data['engineer'] }}</span>.</p>
         <p>Une nouvelle note vient d'être attribuée a l'un de vos plans.</p>
 
         <div class="resource-info">
             <p><strong>Titre du plan : </strong> <span class="highlight">{{$data['plan']}}</span></p>
-            <p><strong>Note attribuée : </strong> <span class="highlight">{{$data['rating']}}</span></p>
+            <p><strong>Note attribuée : </strong> {{$data['rating']}}</p>
+            <p><strong>Nouvelle moyenne : </strong> <span class="highlight">{{$data['rating_avg']}}</span></p>
         </div>
 
-        <p>Bien a vous.</p>
+        <p>Bien à vous.</p>
 
         {{-- <a href="#" class="button">Voir les détails</a> --}}
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nouvelle soumission de plan</title>
+    <title>Inscription d'un nouvel ingénieur</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,28 +67,30 @@
 </head>
 <body>
     <div class="container">
-        <h1>Nouvelle soumission de plan</h1>
-        <p>Bonjour cher Administrateur,</p>
-        <p>Un ingénieur a soumis un nouveau plan sur la plateforme. Voici les détails :</p>
+        <h1>Confirmation d'inscription</h1>
+        <p>Bonjour M. </strong> <span class="highlight">{{ $data['name'] }}</span>.</p>
+        <p>Vous vous êtes inscrit avec succès sur la plateforme CIV-TOOLKIT. Voici vos identifiants de connexion :</p>
 
         <div class="resource-info">
-            <p><strong>Utilisateur : </strong> <span class="highlight">{{ $data['username'] }}</span></p>
-            <p><strong>Catégorie : </strong> <span class="highlight">{{ $data['category'] }}</span></p>
-            <p><strong>Titre : </strong> <span class="highlight">{{ $data['title'] }}</span></p>
-            <p><strong>Description : </strong> {{ $data['description'] }}</p>
-            <p><strong>Prix : </strong> {{ $data['price'] }}</p>
-            <p><strong>Gratuit : </strong> {{ $data['free'] }}</p>
-            {{-- <p><strong>Chemin de la couverture : </strong> <a href="{{ cover_path }}" target="_blank">Voir la couverture</a></p>
-            <p><strong>Chemin du PDF : </strong> <a href="{{ pdf_path }}" target="_blank">Voir le PDF</a></p>
-            <p><strong>Chemin du ZIP : </strong> <a href="{{ zip_path }}" target="_blank">Télécharger le ZIP</a></p> --}}
+            <p><strong>Email : </strong> <span class="highlight">{{ $data['email'] }}</span></p>
+            <p><strong>Mot de passe : </strong> <span class="highlight">{{ $data['password'] }}</span></p>
+            <p><strong>Rôle : </strong> @if ($data['role'] == 'customer')
+                                            Client                
+                                        @else @if ($data['role'] == 'engineer')
+                                            Ingenieur
+                                        @else
+                                            Administrateur
+                                        @endif @endif
+            </p>
+
         </div>
 
-        <p>Merci de bien vouloir examiner cette soumission et prendre les mesures nécessaires.</p>
+        <p>Bien à vous.</p>
 
         {{-- <a href="#" class="button">Voir les détails</a> --}}
 
         <footer>
-            <p>L'équipe de gestion des plans de CIV-TOOLKIT</p>
+            <p>L'équipe de gestion de CIV-TOOLKIT</p>
         </footer>
     </div>
 </body>

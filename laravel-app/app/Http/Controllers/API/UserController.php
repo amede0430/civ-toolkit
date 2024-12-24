@@ -4,12 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\AcceptPlanMailable;
-use App\Models\Plan;
-use App\Models\User;
+use App\Mail\EngineerRegisterMailable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use App\Models\Plan;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -36,13 +38,20 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = User::create([
+        $password = Str::random(10);
+
+        $user = [
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('password123'),
+            'password' => $password,
             'role' => 'engineer',
             'last_login' => now(),
-        ]);
+        ];
+
+        Mail::to($user['email'])->send(new EngineerRegisterMailable($user));
+
+        $user['password'] = Hash::make($password);
+        $user = User::create($user);
 
         return response()->json(['message' => 'Ingénieur créé avec succès', 'data' => $user], 201);
     }

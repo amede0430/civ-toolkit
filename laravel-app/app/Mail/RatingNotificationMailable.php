@@ -24,10 +24,12 @@ class RatingNotificationMailable extends Mailable
     public function __construct($rating)
     {
         $this->sender = User::where('role', 'admin')->first();
+        $plan = Plan::find($rating->plan_id);
         $this->data = [
             'engineer' => User::find($rating->user_id)->name,
-            'plan' => Plan::find($rating->plan_id)->title,
+            'plan' => $plan->title,
             'rating' => $rating->rating,
+            'rating_avg' => $plan->ratings->avg('rating'),
         ];
     }
 
