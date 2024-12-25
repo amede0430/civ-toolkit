@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
@@ -13,10 +12,23 @@ use Illuminate\Support\Str;
 use App\Models\Plan;
 use App\Models\User;
 
+/**
+ * @OA\Tag(
+ *     name="Users",
+ *     description="Gestion des utilisateurs"
+ * )
+ */
 class UserController extends Controller
 {
     /**
-     * Affiche la liste des utilisateurs.
+     * @OA\Get(
+     *     path="/api/users",
+     *     operationId="getUsers",
+     *     tags={"Users"},
+     *     summary="Obtenir la liste des utilisateurs ingénieurs",
+     *     @OA\Response(response=200, description="Liste des utilisateurs récupérée avec succès"),
+     *     @OA\Response(response=500, description="Erreur interne")
+     * )
      */
     public function index()
     {
@@ -25,7 +37,22 @@ class UserController extends Controller
     }
 
     /**
-     * Enregistre un nouvel utilisateur.
+     * @OA\Post(
+     *     path="/api/users",
+     *     operationId="createUser",
+     *     tags={"Users"},
+     *     summary="Enregistrer un nouvel utilisateur ingénieur",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "email"},
+     *             @OA\Property(property="name", type="string", description="Nom de l'utilisateur"),
+     *             @OA\Property(property="email", type="string", description="Email de l'utilisateur")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Utilisateur créé avec succès"),
+     *     @OA\Response(response=422, description="Données invalides")
+     * )
      */
     public function store(Request $request)
     {
@@ -48,8 +75,10 @@ class UserController extends Controller
             'last_login' => now(),
         ];
 
+        // Envoi de l'email d'enregistrement de l'ingénieur
         Mail::to($user['email'])->send(new EngineerRegisterMailable($user));
 
+        // Hashage du mot de passe avant de l'enregistrer dans la base
         $user['password'] = Hash::make($password);
         $user = User::create($user);
 
@@ -57,7 +86,20 @@ class UserController extends Controller
     }
 
     /**
-     * Affiche les détails d'un utilisateur spécifique.
+     * @OA\Get(
+     *     path="/api/users/{user_id}",
+     *     operationId="getUser",
+     *     tags={"Users"},
+     *     summary="Afficher les détails d'un utilisateur spécifique",
+     *     @OA\Parameter(
+     *         name="user_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Utilisateur récupéré avec succès"),
+     *     @OA\Response(response=404, description="Utilisateur non trouvé")
+     * )
      */
     public function show($user_id)
     {
@@ -66,7 +108,28 @@ class UserController extends Controller
     }
 
     /**
-     * Met à jour un utilisateur existant.
+     * @OA\Put(
+     *     path="/api/users/{user_id}",
+     *     operationId="updateUser",
+     *     tags={"Users"},
+     *     summary="Mettre à jour un utilisateur existant",
+     *     @OA\Parameter(
+     *         name="user_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", description="Nom de l'utilisateur"),
+     *             @OA\Property(property="email", type="string", description="Email de l'utilisateur")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Utilisateur mis à jour avec succès"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=404, description="Utilisateur non trouvé")
+     * )
      */
     public function update(Request $request, $user_id)
     {
@@ -76,7 +139,6 @@ class UserController extends Controller
             'name' => 'sometimes|string|max:255'
         ];
 
-        // Ajouter la validation d'email uniquement si l'email est différent
         if ($request->has('email') && $request->email !== $user->email) {
             $rules['email'] = 'sometimes|string|email|max:255|unique:users,email,' . $user_id;
         }
@@ -104,7 +166,20 @@ class UserController extends Controller
     }
 
     /**
-     * Supprime un utilisateur existant.
+     * @OA\Delete(
+     *     path="/api/users/{user_id}",
+     *     operationId="deleteUser",
+     *     tags={"Users"},
+     *     summary="Supprimer un utilisateur existant",
+     *     @OA\Parameter(
+     *         name="user_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Utilisateur supprimé avec succès"),
+     *     @OA\Response(response=404, description="Utilisateur non trouvé")
+     * )
      */
     public function destroy($user_id)
     {
@@ -113,9 +188,33 @@ class UserController extends Controller
         return response()->json(['message' => 'Ingénieur supprimé avec succès'], 200);
     }
 
-    //accepter ou rejeter un plan créer par un ingénieur
-
-    public function accept_plan(Request $request, $plan_id)
+    /**
+     * @OA\Post(
+     *     path="/api/users/accept/plan/{plan_id}",
+     *     operationId="acceptPlan",
+     *     tags={"Plans"},
+     *     summary="Accepter ou rejeter un plan créé par un ingénieur",
+     *    
+     *     @OA\Parameter(
+     *         name="plan_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"comment", "accept"},
+     *             @OA\Property(property="comment", type="string", description="Commentaire sur la décision"),
+     *             @OA\Property(property="accept", type="boolean", description="Accepter ou rejeter le plan")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Décision prise avec succès"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=404, description="Plan non trouvé")
+     * )
+     */
+    public function accept_plan(Request $request, $user_id, $plan_id)
     {
         // Validation des données entrantes
         $validated = $request->validate([
@@ -123,7 +222,6 @@ class UserController extends Controller
             'accept' => 'required|boolean',
         ]);
 
-        
         // Récupérer le plan et vérifier son existence
         $plan = Plan::findOrFail($plan_id);
 
@@ -154,7 +252,6 @@ class UserController extends Controller
             $plan->delete();
         }
 
-        // Retourner une réponse au client
         return response()->json([
             'message' => 'Décision prise avec succès.',
             'data' => $mailData,

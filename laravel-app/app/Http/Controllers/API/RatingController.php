@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
@@ -12,10 +11,23 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Plan;
 
+/**
+ * @OA\Tag(
+ *     name="Ratings",
+ *     description="Gestion des évaluations des plans"
+ * )
+ */
 class RatingController extends Controller
 {
     /**
-     * Afficher la liste des ressources.
+     * @OA\Get(
+     *     path="/api/ratings",
+     *     operationId="getUserRatings",
+     *     tags={"Ratings"},
+     *     summary="Obtenir la liste des évaluations de l'utilisateur connecté",
+     *     @OA\Response(response=200, description="Liste des évaluations récupérée avec succès"),
+     *     @OA\Response(response=500, description="Erreur interne")
+     * )
      */
     public function index()
     {
@@ -24,16 +36,31 @@ class RatingController extends Controller
                          ->get();
 
         return response()->json($ratings, 200);
-        return response()->json(Rating::with('plan')->where('user_id', Auth::id())->get());
     }
 
     /**
-     * Stocker une nouvelle ressource dans le stockage.
+     * @OA\Post(
+     *     path="/api/ratings",
+     *     operationId="storeRating",
+     *     tags={"Ratings"},
+     *     summary="Créer ou mettre à jour une évaluation pour un plan",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"plan_id", "rating"},
+     *             @OA\Property(property="plan_id", type="integer", description="ID du plan évalué"),
+     *             @OA\Property(property="rating", type="integer", description="Note du plan (1-5)")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Évaluation enregistrée avec succès"),
+     *     @OA\Response(response=400, description="Données invalides"),
+     *     @OA\Response(response=500, description="Erreur interne")
+     * )
      */
     public function store(Request $request)
     {
+        // Validation des données
         $validator = Validator::make($request->all(), [
-            // 'user_id' => 'required|exists:users,id',
             'plan_id' => 'required|exists:plans,id',
             'rating' => 'required|integer|min:1|max:5',
         ]);
@@ -42,6 +69,7 @@ class RatingController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        // Création ou mise à jour de l'évaluation
         $rating = Rating::updateOrCreate(
             [
                 'plan_id' => $request->plan_id,
@@ -50,14 +78,29 @@ class RatingController extends Controller
             ['rating' => $request->rating]
         );
 
-        return response()->json(['message' => 'Note sauvegardée avec succès', 'rating' => $rating], 201);
-        Mail::to(User::find(Plan::find($rating->plan_id)->user_id)->email)->send(new RatingNotificationMailable($rating));
+        // Envoi du mail de notification à l'utilisateur du plan
+        Mail::to(User::find(Plan::find($rating->plan_id)->user_id)->email)
+            ->send(new RatingNotificationMailable($rating));
 
-        return response()->json(['message' => 'Note sauvegardee avec succes', 'rating' => $rating],201);
+        return response()->json(['message' => 'Note sauvegardée avec succès', 'rating' => $rating], 201);
     }
 
     /**
-     * Afficher la ressource spécifiée.
+     * @OA\Get(
+     *     path="/api/ratings/{id}",
+     *     operationId="getRating",
+     *     tags={"Ratings"},
+     *     summary="Afficher les détails d'une évaluation",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Évaluation récupérée avec succès"),
+     *     @OA\Response(response=404, description="Évaluation non trouvée"),
+     *     @OA\Response(response=500, description="Erreur interne")
+     * )
      */
     public function show(string $id)
     {
@@ -68,11 +111,33 @@ class RatingController extends Controller
         }
 
         return response()->json($rating, 200);
-        return response()->json($rating);
     }
 
     /**
-     * Mettre à jour la ressource spécifiée.
+     * @OA\Put(
+     *     path="/api/ratings/{id}",
+     *     operationId="updateRating",
+     *     tags={"Ratings"},
+     *     summary="Mettre à jour une évaluation existante",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"plan_id", "rating"},
+     *             @OA\Property(property="plan_id", type="integer", description="ID du plan évalué"),
+     *             @OA\Property(property="rating", type="integer", description="Note du plan (1-5)")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Évaluation mise à jour avec succès"),
+     *     @OA\Response(response=400, description="Données invalides"),
+     *     @OA\Response(response=404, description="Évaluation non trouvée"),
+     *     @OA\Response(response=500, description="Erreur interne")
+     * )
      */
     public function update(Request $request, string $id)
     {
@@ -91,19 +156,30 @@ class RatingController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        // Mise à jour de l'évaluation
         $rating->update([
             'rating' => $request->rating
         ]);
 
         return response()->json(['message' => 'Note mise à jour avec succès', 'rating' => $rating]);
-        return response()->json([
-            'message' => "Note mise a jour avec succes",
-            'rating' => $rating
-        ]);
     }
 
     /**
-     * Supprimer la ressource spécifiée.
+     * @OA\Delete(
+     *     path="/api/ratings/{id}",
+     *     operationId="deleteRating",
+     *     tags={"Ratings"},
+     *     summary="Supprimer une évaluation",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Évaluation supprimée avec succès"),
+     *     @OA\Response(response=404, description="Évaluation non trouvée"),
+     *     @OA\Response(response=500, description="Erreur interne")
+     * )
      */
     public function destroy($id)
     {

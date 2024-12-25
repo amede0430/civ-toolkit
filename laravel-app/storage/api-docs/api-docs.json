@@ -451,6 +451,615 @@
                     }
                 }
             }
+        },
+        "/api/plans": {
+            "get": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Récupérer la liste des plans d'un ingénieur connecté",
+                "operationId": "getPlans",
+                "responses": {
+                    "200": {
+                        "description": "Liste des plans récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Créer un nouveau plan",
+                "operationId": "storePlan",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "price",
+                                    "free",
+                                    "cover_path",
+                                    "pdf_path",
+                                    "zip_path"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "description": "Titre du plan",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description du plan",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "Prix du plan",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "free": {
+                                        "description": "Plan gratuit ou payant",
+                                        "type": "boolean"
+                                    },
+                                    "cover_path": {
+                                        "description": "Image de couverture du plan",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "pdf_path": {
+                                        "description": "PDF du plan",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "zip_path": {
+                                        "description": "Fichier ZIP du plan",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Plan créé avec succès"
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/api/plans/{plan_id}": {
+            "get": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Récupérer les détails d'un plan",
+                "operationId": "getPlan",
+                "parameters": [
+                    {
+                        "name": "plan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails du plan récupérés avec succès"
+                    },
+                    "404": {
+                        "description": "Plan non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Mettre à jour un plan",
+                "operationId": "updatePlan",
+                "parameters": [
+                    {
+                        "name": "plan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "price",
+                                    "free"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "description": "Titre du plan",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description du plan",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "Prix du plan",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "free": {
+                                        "description": "Plan gratuit ou payant",
+                                        "type": "boolean"
+                                    },
+                                    "cover_path": {
+                                        "description": "Image de couverture du plan",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "pdf_path": {
+                                        "description": "PDF du plan",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "zip_path": {
+                                        "description": "Fichier ZIP du plan",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Plan mis à jour avec succès"
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "404": {
+                        "description": "Plan non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Supprimer un plan",
+                "operationId": "deletePlan",
+                "parameters": [
+                    {
+                        "name": "plan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Plan supprimé avec succès"
+                    },
+                    "404": {
+                        "description": "Plan non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/api/ratings": {
+            "get": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Obtenir la liste des évaluations de l'utilisateur connecté",
+                "operationId": "getUserRatings",
+                "responses": {
+                    "200": {
+                        "description": "Liste des évaluations récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Créer ou mettre à jour une évaluation pour un plan",
+                "operationId": "storeRating",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id",
+                                    "rating"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "description": "ID du plan évalué",
+                                        "type": "integer"
+                                    },
+                                    "rating": {
+                                        "description": "Note du plan (1-5)",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Évaluation enregistrée avec succès"
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/api/ratings/{id}": {
+            "get": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Afficher les détails d'une évaluation",
+                "operationId": "getRating",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Évaluation récupérée avec succès"
+                    },
+                    "404": {
+                        "description": "Évaluation non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Mettre à jour une évaluation existante",
+                "operationId": "updateRating",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id",
+                                    "rating"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "description": "ID du plan évalué",
+                                        "type": "integer"
+                                    },
+                                    "rating": {
+                                        "description": "Note du plan (1-5)",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Évaluation mise à jour avec succès"
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "404": {
+                        "description": "Évaluation non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Supprimer une évaluation",
+                "operationId": "deleteRating",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Évaluation supprimée avec succès"
+                    },
+                    "404": {
+                        "description": "Évaluation non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Obtenir la liste des utilisateurs ingénieurs",
+                "operationId": "getUsers",
+                "responses": {
+                    "200": {
+                        "description": "Liste des utilisateurs récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Enregistrer un nouvel utilisateur ingénieur",
+                "operationId": "createUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nom de l'utilisateur",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "Email de l'utilisateur",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Utilisateur créé avec succès"
+                    },
+                    "422": {
+                        "description": "Données invalides"
+                    }
+                }
+            }
+        },
+        "/api/users/{user_id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Afficher les détails d'un utilisateur spécifique",
+                "operationId": "getUser",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur récupéré avec succès"
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Mettre à jour un utilisateur existant",
+                "operationId": "updateUser",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Nom de l'utilisateur",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "Email de l'utilisateur",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur mis à jour avec succès"
+                    },
+                    "422": {
+                        "description": "Données invalides"
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Supprimer un utilisateur existant",
+                "operationId": "deleteUser",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur supprimé avec succès"
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    }
+                }
+            }
+        },
+        "/api/users/accept/plan/{plan_id}": {
+            "post": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Accepter ou rejeter un plan créé par un ingénieur",
+                "operationId": "acceptPlan",
+                "parameters": [
+                    {
+                        "name": "plan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "comment",
+                                    "accept"
+                                ],
+                                "properties": {
+                                    "comment": {
+                                        "description": "Commentaire sur la décision",
+                                        "type": "string"
+                                    },
+                                    "accept": {
+                                        "description": "Accepter ou rejeter le plan",
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Décision prise avec succès"
+                    },
+                    "422": {
+                        "description": "Données invalides"
+                    },
+                    "404": {
+                        "description": "Plan non trouvé"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -466,6 +1075,18 @@
         {
             "name": "Catégories",
             "description": "Gestion des catégories"
+        },
+        {
+            "name": "Plans",
+            "description": "Gestion des plans"
+        },
+        {
+            "name": "Ratings",
+            "description": "Gestion des évaluations des plans"
+        },
+        {
+            "name": "Users",
+            "description": "Gestion des utilisateurs"
         },
         {
             "name": "Authentification",
