@@ -6,10 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Catégories",
+ *     description="Gestion des catégories"
+ * )
+ */
 class CategorieController extends Controller
 {
     /**
-     * Affiche la liste des catégories.
+     * @OA\Get(
+     *     path="/api/categories",
+     *     operationId="getCategories",
+     *     tags={"Catégories"},
+     *     summary="Récupérer la liste des catégories",
+     *     @OA\Response(response=200, description="Liste des catégories récupérée avec succès"),
+     *     @OA\Response(response=500, description="Erreur interne")
+     * )
      */
     public function index()
     {
@@ -21,7 +34,22 @@ class CategorieController extends Controller
     }
 
     /**
-     * Enregistre une nouvelle catégorie.
+     * @OA\Post(
+     *     path="/api/categories",
+     *     operationId="createCategory",
+     *     tags={"Catégories"},
+     *     summary="Créer une nouvelle catégorie",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "description"},
+     *             @OA\Property(property="name", type="string", example="Électronique"),
+     *             @OA\Property(property="description", type="string", example="Catégorie pour les produits électroniques")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Catégorie créée avec succès"),
+     *     @OA\Response(response=400, description="Données invalides")
+     * )
      */
     public function store(Request $request)
     {
@@ -41,7 +69,21 @@ class CategorieController extends Controller
     }
 
     /**
-     * Affiche les détails d'une catégorie.
+     * @OA\Get(
+     *     path="/api/categories/{categorie_id}",
+     *     operationId="getCategory",
+     *     tags={"Catégories"},
+     *     summary="Récupérer les détails d'une catégorie",
+     *     @OA\Parameter(
+     *         name="categorie_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la catégorie",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(response=200, description="Catégorie récupérée avec succès"),
+     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     * )
      */
     public function show(Categorie $categorie)
     {
@@ -52,7 +94,30 @@ class CategorieController extends Controller
     }
 
     /**
-     * Met à jour une catégorie existante.
+     * @OA\Put(
+     *     path="/api/categories/{categorie_id}",
+     *     operationId="updateCategory",
+     *     tags={"Catégories"},
+     *     summary="Mettre à jour une catégorie",
+     *     @OA\Parameter(
+     *         name="categorie_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la catégorie",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "description"},
+     *             @OA\Property(property="name", type="string", example="Informatique"),
+     *             @OA\Property(property="description", type="string", example="Catégorie pour les produits informatiques")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Catégorie mise à jour avec succès"),
+     *     @OA\Response(response=400, description="Données invalides"),
+     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     * )
      */
     public function update(Request $request, $categorie_id)
     {
@@ -73,7 +138,21 @@ class CategorieController extends Controller
     }
 
     /**
-     * Supprime une catégorie.
+     * @OA\Delete(
+     *     path="/api/categories/{categorie_id}",
+     *     operationId="deleteCategory",
+     *     tags={"Catégories"},
+     *     summary="Supprimer une catégorie",
+     *     @OA\Parameter(
+     *         name="categorie_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la catégorie",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(response=200, description="Catégorie supprimée avec succès"),
+     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     * )
      */
     public function destroy($categorie_id)
     {

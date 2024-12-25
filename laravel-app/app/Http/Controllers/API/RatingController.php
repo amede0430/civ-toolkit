@@ -11,20 +11,23 @@ use Illuminate\Support\Facades\Validator;
 class RatingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Afficher la liste des ressources.
      */
     public function index()
     {
-        return response()->json(Rating::with(['user', 'plan'])->where('user_id', Auth::id())->get(), 200);
+        $ratings = Rating::with(['user', 'plan'])
+                         ->where('user_id', Auth::id())
+                         ->get();
+
+        return response()->json($ratings, 200);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Stocker une nouvelle ressource dans le stockage.
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
             'plan_id' => 'required|exists:plans,id',
             'rating' => 'required|integer|min:1|max:5',
         ]);
@@ -41,32 +44,34 @@ class RatingController extends Controller
             ['rating' => $request->rating]
         );
 
-        return response()->json(['message' => 'Note sauvegardee avec succes', 'rating' => $rating]);
+        return response()->json(['message' => 'Note sauvegardée avec succès', 'rating' => $rating], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Afficher la ressource spécifiée.
      */
     public function show(string $id)
     {
         $rating = Rating::with(['user', 'plan'])->find($id);
+
         if (!$rating) {
-            return response()->json(['message' => 'Note non trouvee'], 404);
+            return response()->json(['message' => 'Note non trouvée'], 404);
         }
+
         return response()->json($rating, 200);
     }
 
-
     /**
-     * Update the specified resource in storage.
+     * Mettre à jour la ressource spécifiée.
      */
     public function update(Request $request, string $id)
     {
-
         $rating = Rating::find($id);
+
         if (!$rating) {
-            return response()->json(['message' => 'Note non trouvee'], 404);
+            return response()->json(['message' => 'Note non trouvée'], 404);
         }
+
         $validator = Validator::make($request->all(), [
             'plan_id' => 'required|exists:plans,id',
             'rating' => 'required|integer|min:1|max:5',
@@ -76,29 +81,26 @@ class RatingController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $rating = Rating::updateOrCreate(
-            [
-                'plan_id' => $request->plan_id,
-                'user_id' => Auth::user()->id,
-            ],
-            ['rating' => $request->rating]
-        );
+        $rating->update([
+            'rating' => $request->rating
+        ]);
 
-        return response()->json(['message' => "Note mise a jour avec succes", 'rating' => $rating]);
+        return response()->json(['message' => 'Note mise à jour avec succès', 'rating' => $rating]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Supprimer la ressource spécifiée.
      */
     public function destroy($id)
     {
         $rating = Rating::find($id);
+
         if (!$rating) {
-            return response()->json(['message' => 'Note non trouvee'], 404);
+            return response()->json(['message' => 'Note non trouvée'], 404);
         }
 
         $rating->delete();
 
-        return response()->json(['message' => 'Note supprimee avec succes']);
+        return response()->json(['message' => 'Note supprimée avec succès']);
     }
 }

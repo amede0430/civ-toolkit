@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class PlanController extends Controller
 {
-    /**
-     * Afficher la liste des ressources.
-     */
+    
     public function index()
     {
         $plans = Plan::all()->where('user_id', Auth::id());
@@ -27,9 +25,7 @@ class PlanController extends Controller
         return response()->json($plans);
     }
 
-    /**
-     * Stocker une nouvelle ressource dans le stockage.
-     */
+   
     public function store(Request $request)
     {
         // Validation des données
@@ -71,9 +67,7 @@ class PlanController extends Controller
         return response()->json($plan, 201);
     }
 
-    /**
-     * Afficher la ressource spécifiée.
-     */
+    
     public function show($plan_id)
     {
         $plan = Plan::findOrFail($plan_id);
@@ -85,13 +79,9 @@ class PlanController extends Controller
         return response()->json($plan);
     }
 
-    /**
-     * Mettre à jour la ressource spécifiée.
-     */
+   
     public function update(Request $request, $plan_id)
     {
-        return response()->json($request);
-
         $plan = Plan::findOrFail($plan_id);
 
         // Validation des données
@@ -106,30 +96,25 @@ class PlanController extends Controller
             'zip_path' => 'nullable|mimes:zip,rar|max:10240',
         ]);
 
-
+        // Mettre à jour les champs du plan
         if ($request->has('category_id')) {
             $plan->category_id = $request->category_id;
         }
-
         if ($request->has('title')) {
             $plan->title = $request->title;
         }
-
         if ($request->has('description')) {
             $plan->description = $request->description;
         }
-
         if ($request->has('price')) {
             $plan->price = $request->price;
         }
-
         if ($request->has('free')) {
             $plan->free = $request->free;
         }
 
         // Gérer les fichiers (si nouveaux fichiers sont fournis)
         if ($request->hasFile('cover_path')) {
-            // Supprimer l'ancien fichier si nécessaire
             if ($plan->cover_path) {
                 Storage::disk('public')->delete($plan->cover_path);
             }
@@ -161,10 +146,7 @@ class PlanController extends Controller
         return response()->json($plan);
     }
 
-
-    /**
-     * Supprimer la ressource spécifiée.
-     */
+   
     public function destroy($plan_id)
     {
         $plan = Plan::findOrFail($plan_id);
