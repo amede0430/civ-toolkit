@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Décision concernant votre plan</title>
+    <title>Nouvelle soumission de plan</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,12 +34,15 @@
             color: #007bff;
             font-weight: bold;
         }
-        blockquote {
-            font-style: italic;
-            color: #6c757d;
-            margin: 15px 0;
-            padding-left: 15px;
-            border-left: 4px solid #007bff;
+        .resource-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fdfdfd;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .resource-info p {
+            margin: 5px 0;
         }
         .button {
             display: inline-block;
@@ -64,23 +67,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Décision concernant votre plan</h1>
-        <p>Bonjour <span class="highlight">{{ $mailData['user_name'] }}</span>,</p>
-        <p>Votre plan intitulé <strong>"{{ $mailData['plan_title'] }}"</strong> a été 
-            <span class="highlight">{{ $mailData['decision'] }}</span>.</p>
+        <h1>Nouvelle soumission de plan</h1>
+        <p>Bonjour cher Administrateur,</p>
+        <p>Un ingénieur a soumis un nouveau plan sur la plateforme. Voici les détails :</p>
 
-        <p>Voici le commentaire de l'administrateur :</p>
-        <blockquote>
-            {{ $mailData['comment'] }}
-        </blockquote>
+        <div class="resource-info">
+            <p><strong>Utilisateur : </strong> <span class="highlight">{{ $data['username'] }}</span></p>
+            <p><strong>Catégorie : </strong> <span class="highlight">{{ $data['category'] }}</span></p>
+            <p><strong>Titre : </strong> <span class="highlight">{{ $data['title'] }}</span></p>
+            <p><strong>Description : </strong> {{ $data['description'] }}</p>
+            <p><strong>Prix : </strong> {{ $data['price'] }}</p>
+            <p><strong>Gratuit : </strong> {{ $data['free'] }}</p>
+            {{-- <p><strong>Chemin de la couverture : </strong> <a href="{{ cover_path }}" target="_blank">Voir la couverture</a></p>
+            <p><strong>Chemin du PDF : </strong> <a href="{{ pdf_path }}" target="_blank">Voir le PDF</a></p>
+            <p><strong>Chemin du ZIP : </strong> <a href="{{ zip_path }}" target="_blank">Télécharger le ZIP</a></p> --}}
+        </div>
 
-        @if($mailData['decision'] === 'Accepté')
-            <p>Nous sommes ravis de vous informer que votre plan a été validé. Merci pour votre contribution !</p>
-        @else
-            <p>Malheureusement, votre plan n'a pas été retenu. Nous vous invitons à prendre en compte les remarques ci-dessus pour une éventuelle soumission future.</p>
-        @endif
+        <p>Merci de bien vouloir examiner cette soumission et prendre les mesures nécessaires.</p>
 
-        {{-- <a href="" class="button">Voir les détails</a> --}}
+        {{-- <a href="#" class="button">Voir les détails</a> --}}
 
         <footer>
             <p>L'équipe de gestion de CIV-TOOLKIT.</p>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Décision concernant votre plan</title>
+    <title>Attribution d'une nouvelle note à un plan.</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,12 +34,15 @@
             color: #007bff;
             font-weight: bold;
         }
-        blockquote {
-            font-style: italic;
-            color: #6c757d;
-            margin: 15px 0;
-            padding-left: 15px;
-            border-left: 4px solid #007bff;
+        .resource-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fdfdfd;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .resource-info p {
+            margin: 5px 0;
         }
         .button {
             display: inline-block;
@@ -64,23 +67,19 @@
 </head>
 <body>
     <div class="container">
-        <h1>Décision concernant votre plan</h1>
-        <p>Bonjour <span class="highlight">{{ $mailData['user_name'] }}</span>,</p>
-        <p>Votre plan intitulé <strong>"{{ $mailData['plan_title'] }}"</strong> a été 
-            <span class="highlight">{{ $mailData['decision'] }}</span>.</p>
+        <h1>Attribution de note</h1>
+        <p>Bonjour M. <span class="highlight">{{ $data['engineer'] }}</span>.</p>
+        <p>Une nouvelle note vient d'être attribuée a l'un de vos plans.</p>
 
-        <p>Voici le commentaire de l'administrateur :</p>
-        <blockquote>
-            {{ $mailData['comment'] }}
-        </blockquote>
+        <div class="resource-info">
+            <p><strong>Titre du plan : </strong> <span class="highlight">{{$data['plan']}}</span></p>
+            <p><strong>Note attribuée : </strong> {{$data['rating']}}</p>
+            <p><strong>Nouvelle moyenne : </strong> <span class="highlight">{{$data['rating_avg']}}</span></p>
+        </div>
 
-        @if($mailData['decision'] === 'Accepté')
-            <p>Nous sommes ravis de vous informer que votre plan a été validé. Merci pour votre contribution !</p>
-        @else
-            <p>Malheureusement, votre plan n'a pas été retenu. Nous vous invitons à prendre en compte les remarques ci-dessus pour une éventuelle soumission future.</p>
-        @endif
+        <p>Bien à vous,</p>
 
-        {{-- <a href="" class="button">Voir les détails</a> --}}
+        {{-- <a href="#" class="button">Voir les détails</a> --}}
 
         <footer>
             <p>L'équipe de gestion de CIV-TOOLKIT.</p>

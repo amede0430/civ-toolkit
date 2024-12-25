@@ -2,54 +2,53 @@
 
 namespace App\Mail;
 
+
 use Illuminate\Bus\Queueable;
-// use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
-use Illuminate\Mail\Mailables\Address;
 
-class AcceptPlanMailable extends Mailable
+class EngineerRegisterMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $mailData, $sender;
-
+    public $userData, $sender;
     /**
-     * Crée une nouvelle instance de message.
+     * Create a new message instance.
      */
-    public function __construct($mailData)
+    public function __construct($user)
     {
+        $this->userData = $user;
         $this->sender = User::where('role', 'admin')->first();
-        $this->mailData = $mailData;
     }
 
     /**
-     * Définit l'enveloppe du message.
+     * Get the message envelope.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address($this->sender->email, $this->sender->name),
-            subject: 'Décision sur le plan : ' . $this->mailData['plan_title'], 
+            subject: 'Enregistrement d\'un nouvel inénieur',
         );
     }
 
     /**
-     * Définit le contenu du message.
+     * Get the message content definition.
      */
     public function content(): Content
     {
         return new Content(
-            view: 'mail.accept_plan', 
-            with: ['mailData' => $this->mailData], 
+            view: 'mail.engineer-register',
+            with: ['data' => $this->userData],
         );
     }
 
     /**
-     * Définit les pièces jointes du message.
+     * Get the attachments for the message.
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */

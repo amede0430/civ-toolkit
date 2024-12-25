@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ValidationRegisterMailable;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 class AuthController extends Controller
@@ -43,19 +47,28 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
 
-        $user = User::create([
+        $user = [
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
-        ]);
+            'role' => 'customer',
+            'password' => $validatedData['password'],
+            'last_login' => Carbon::now(),
+        ];
 
         return response()->json(['message' => 'Utilisateur créé avec succès.'], 201);
+        Mail::to($user['email'])->send(new ValidationRegisterMailable($user));
+
+        $user['password'] = Hash::make($user['password']);
+        $user = User::create($user);
+
+        return response()->json($user,201);
     }
 
     /**
@@ -93,8 +106,8 @@ class AuthController extends Controller
             $token = $user->createToken('API Token')->plainTextToken;
 
             return response()->json([
-                'message' => 'Connexion réussie.',
                 'token' => $token,
+                'user' => $user,
             ]);
         }
 

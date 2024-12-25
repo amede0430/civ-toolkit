@@ -23,7 +23,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return response()->json(Comment::with('plan')->where('user_id', Auth::id())->get(), 200);
+        return response()->json(Comment::with('plan')->where('user_id', Auth::id())->get());
     }
 
     /**
@@ -87,7 +87,7 @@ class CommentController extends Controller
         if (!$comment) {
             return response()->json(['message' => 'Commentaire non trouvé'], 404);
         }
-        return response()->json($comment, 200);
+        return response()->json($comment);
     }
 
     /**
