@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedDecimal('amount');
             $table->string('payment_method');
-            $table->string('reference');
+            $table->string('reference')->unique();
 
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->timestamps(); // payment_date == created_at
