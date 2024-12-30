@@ -120,7 +120,7 @@
                 ]
             }
         },
-        "/api/categories": {
+        "/api/admin/categories": {
             "get": {
                 "tags": [
                     "Catégories"
@@ -176,7 +176,7 @@
                 }
             }
         },
-        "/api/categories/{categorie_id}": {
+        "/api/admin/categories/{categorie_id}": {
             "get": {
                 "tags": [
                     "Catégories"
@@ -452,7 +452,7 @@
                 }
             }
         },
-        "/api/plans": {
+        "/api/engineer/plans": {
             "get": {
                 "tags": [
                     "Plans"
@@ -540,7 +540,7 @@
                 }
             }
         },
-        "/api/plans/{plan_id}": {
+        "/api/engineer/plans/{plan_id}": {
             "get": {
                 "tags": [
                     "Plans"
@@ -851,7 +851,7 @@
                 }
             }
         },
-        "/api/users": {
+        "/api/admin/engineers": {
             "get": {
                 "tags": [
                     "Users"
@@ -907,7 +907,7 @@
                 }
             }
         },
-        "/api/users/{user_id}": {
+        "/api/admin/engineers/{user_id}": {
             "get": {
                 "tags": [
                     "Users"
@@ -1007,7 +1007,7 @@
                 }
             }
         },
-        "/api/users/accept/plan/{plan_id}": {
+        "/api/admin/accept/plan/{plan_id}": {
             "post": {
                 "tags": [
                     "Plans"

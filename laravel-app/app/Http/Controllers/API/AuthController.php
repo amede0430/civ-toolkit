@@ -62,13 +62,15 @@ class AuthController extends Controller
             'last_login' => Carbon::now(),
         ];
 
-        return response()->json(['message' => 'Utilisateur créé avec succès.'], 201);
         Mail::to($user['email'])->send(new ValidationRegisterMailable($user));
 
         $user['password'] = Hash::make($user['password']);
         $user = User::create($user);
 
-        return response()->json($user,201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Utilisateur cree avec succes'
+        ],201);
     }
 
     /**
@@ -107,11 +109,16 @@ class AuthController extends Controller
 
             return response()->json([
                 'token' => $token,
-                'user' => $user,
+                'success' => true,
+                'message' => 'Connexion réussie.',
+                'data' => $user,
             ]);
         }
 
-        return response()->json(['error' => 'Identifiants incorrects.'], 401);
+        return response()->json([
+            // 'success' => false,
+            'message' => 'Identifiants incorrects.',
+        ], 401);
     }
 
     /**
@@ -134,6 +141,9 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Déconnexion réussie.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Déconnexion réussie.'
+        ]);
     }
 }

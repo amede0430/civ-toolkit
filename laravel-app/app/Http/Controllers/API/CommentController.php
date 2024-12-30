@@ -23,7 +23,11 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return response()->json(Comment::with('plan')->where('user_id', Auth::id())->get());
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des commentaires récupérée avec succès.',
+            'data' => Comment::with('plan')->where('user_id', Auth::id())->get()
+    ]);
     }
 
     /**
@@ -52,7 +56,10 @@ class CommentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
         }
 
         $comment = Comment::create([
@@ -61,7 +68,11 @@ class CommentController extends Controller
             'comment' => $request->comment
         ]);
 
-        return response()->json(['message' => 'Commentaire ajouté avec succès', 'comment' => $comment], 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Commentaire ajouté avec succès',
+            'data' => $comment
+        ], 201);
     }
 
     /**
@@ -85,9 +96,16 @@ class CommentController extends Controller
     {
         $comment = Comment::with('plan')->find($id);
         if (!$comment) {
-            return response()->json(['message' => 'Commentaire non trouvé'], 404);
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Commentaire non trouvé'
+            ], 404);
         }
-        return response()->json($comment);
+        return response()->json([
+            'sucess' => true,
+            'message' => 'Commentaire récupéré avec succès',
+            'data' => $comment
+        ]);
     }
 
     /**
@@ -120,7 +138,10 @@ class CommentController extends Controller
     {
         $comment = Comment::find($id);        
         if (!$comment) {
-            return response()->json(['message' => 'Commentaire non trouvé'], 404);
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Commentaire non trouvé'
+            ], 404);
         }
 
         $validator = Validator::make($request->all(), [
@@ -130,7 +151,10 @@ class CommentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
         }
 
         $comment->update([
@@ -139,7 +163,11 @@ class CommentController extends Controller
             'comment' => $request->comment
         ]);
 
-        return response()->json(['message' => 'Commentaire mis à jour avec succès', 'comment' => $comment], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Commentaire mis à jour avec succès',
+            'data' => $comment
+        ], 200);
     }
 
     /**
@@ -163,11 +191,17 @@ class CommentController extends Controller
     {
         $comment = Comment::find($id);        
         if (!$comment) {
-            return response()->json(['message' => 'Commentaire non trouvé'], 404);
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Commentaire non trouvé'
+            ], 404);
         }
 
         $comment->delete();
         
-        return response()->json(['message' => 'Commentaire supprimé avec succès']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Commentaire supprimé avec succès'
+        ]);
     }
 }

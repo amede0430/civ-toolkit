@@ -35,7 +35,11 @@ class RatingController extends Controller
                          ->where('user_id', Auth::id())
                          ->get();
 
-        return response()->json($ratings, 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des évaluations récupérée avec succès.',
+            'ratings' => $ratings
+        ], 200);
     }
 
     /**
@@ -66,7 +70,10 @@ class RatingController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
         }
 
         // Création ou mise à jour de l'évaluation
@@ -82,7 +89,11 @@ class RatingController extends Controller
         Mail::to(User::find(Plan::find($rating->plan_id)->user_id)->email)
             ->send(new RatingNotificationMailable($rating));
 
-        return response()->json(['message' => 'Note sauvegardée avec succès', 'rating' => $rating], 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Note sauvegardée avec succès',
+            'data' => $rating
+        ], 201);
     }
 
     /**
@@ -107,10 +118,17 @@ class RatingController extends Controller
         $rating = Rating::with(['user', 'plan'])->find($id);
 
         if (!$rating) {
-            return response()->json(['message' => 'Note non trouvée'], 404);
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Note non trouvée'
+            ], 404);
         }
 
-        return response()->json($rating, 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Note récupérée avec succès',
+            'data' => $rating
+        ], 200);
     }
 
     /**
@@ -144,7 +162,10 @@ class RatingController extends Controller
         $rating = Rating::find($id);
 
         if (!$rating) {
-            return response()->json(['message' => 'Note non trouvée'], 404);
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Note non trouvée'
+            ], 404);
         }
 
         $validator = Validator::make($request->all(), [
@@ -153,7 +174,10 @@ class RatingController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
         }
 
         // Mise à jour de l'évaluation
@@ -161,7 +185,11 @@ class RatingController extends Controller
             'rating' => $request->rating
         ]);
 
-        return response()->json(['message' => 'Note mise à jour avec succès', 'rating' => $rating]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Note mise à jour avec succès',
+            'data' => $rating
+        ]);
     }
 
     /**
@@ -186,11 +214,17 @@ class RatingController extends Controller
         $rating = Rating::find($id);
 
         if (!$rating) {
-            return response()->json(['message' => 'Note non trouvée'], 404);
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Note non trouvée'
+            ], 404);
         }
 
         $rating->delete();
 
-        return response()->json(['message' => 'Note supprimée avec succès']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Note supprimée avec succès'
+        ]);
     }
 }
