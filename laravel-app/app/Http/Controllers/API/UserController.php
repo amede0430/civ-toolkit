@@ -22,7 +22,7 @@ class UserController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/users",
+     *     path="/api/admin/engineers",
      *     operationId="getUsers",
      *     tags={"Users"},
      *     summary="Obtenir la liste des utilisateurs ingénieurs",
@@ -33,12 +33,16 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('plans')->where('role', 'engineer')->get();
-        return response()->json(['data' => $users], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des utilisateurs recuperée avec sucees.',
+            'data' => $users
+        ], 200);
     }
 
     /**
      * @OA\Post(
-     *     path="/api/users",
+     *     path="/api/admin/engineers",
      *     operationId="createUser",
      *     tags={"Users"},
      *     summary="Enregistrer un nouvel utilisateur ingénieur",
@@ -62,7 +66,10 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
         }
 
         $password = Str::random(10);
@@ -82,12 +89,16 @@ class UserController extends Controller
         $user['password'] = Hash::make($password);
         $user = User::create($user);
 
-        return response()->json(['message' => 'Ingénieur créé avec succès', 'data' => $user], 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Ingénieur créé avec succès',
+            'data' => $user
+        ], 201);
     }
 
     /**
      * @OA\Get(
-     *     path="/api/users/{user_id}",
+     *     path="/api/admin/engineers/{user_id}",
      *     operationId="getUser",
      *     tags={"Users"},
      *     summary="Afficher les détails d'un utilisateur spécifique",
@@ -103,13 +114,24 @@ class UserController extends Controller
      */
     public function show($user_id)
     {
-        $user = User::with('plans')->findOrFail($user_id);
-        return response()->json(['data' => $user], 200);
+        $user = User::with('plans')->find($user_id);
+        if (!$user) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Utilisateur non trouvé'
+            ], 404);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Utilisateur récupéré avec succès',
+            'data' => $user
+        ], 200);
     }
 
     /**
      * @OA\Put(
-     *     path="/api/users/{user_id}",
+     *     path="/api/admin/engineers/{user_id}",
      *     operationId="updateUser",
      *     tags={"Users"},
      *     summary="Mettre à jour un utilisateur existant",
@@ -133,7 +155,14 @@ class UserController extends Controller
      */
     public function update(Request $request, $user_id)
     {
-        $user = User::findOrFail($user_id);
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Utilisateur non trouvé'
+            ], 404);
+        }
 
         $rules = [
             'name' => 'sometimes|string|max:255'
@@ -146,7 +175,10 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
         }
 
         if ($request->has('name')) {
@@ -160,6 +192,7 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
+            'success' => true,
             'message' => 'Ingénieur mis à jour avec succès',
             'data' => $user
         ], 200);
@@ -167,7 +200,7 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/users/{user_id}",
+     *     path="/api/admin/engineers/{user_id}",
      *     operationId="deleteUser",
      *     tags={"Users"},
      *     summary="Supprimer un utilisateur existant",
@@ -183,14 +216,24 @@ class UserController extends Controller
      */
     public function destroy($user_id)
     {
-        $user = User::findOrFail($user_id);
+        $user = User::find($user_id);
+        if (!$user) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Utilisateur non trouvé'
+            ], 404);
+        }
+
         $user->delete();
-        return response()->json(['message' => 'Ingénieur supprimé avec succès'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Ingénieur supprimé avec succès'
+        ], 200);
     }
 
     /**
      * @OA\Post(
-     *     path="/api/users/accept/plan/{plan_id}",
+     *     path="/api/admin/accept/plan/{plan_id}",
      *     operationId="acceptPlan",
      *     tags={"Plans"},
      *     summary="Accepter ou rejeter un plan créé par un ingénieur",
@@ -223,7 +266,14 @@ class UserController extends Controller
         ]);
 
         // Récupérer le plan et vérifier son existence
-        $plan = Plan::findOrFail($plan_id);
+        $plan = Plan::find($plan_id);
+
+        if (!$plan) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Plan non trouvé.',
+            ], 404);
+        }
 
         // Mettre à jour le statut du plan (accepté ou non)
         $plan->accept = $validated['accept'];

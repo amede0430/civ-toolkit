@@ -16,7 +16,7 @@ class CategorieController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/categories",
+     *     path="/api/admin/categories",
      *     operationId="getCategories",
      *     tags={"Catégories"},
      *     summary="Récupérer la liste des catégories",
@@ -28,6 +28,7 @@ class CategorieController extends Controller
     {
         $categories = Categorie::all();
         return response()->json([
+            'success' => true,
             'message' => 'Liste des catégories récupérée avec succès.',
             'data' => $categories
         ], 200);
@@ -35,7 +36,7 @@ class CategorieController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/categories",
+     *     path="/api/admin/categories",
      *     operationId="createCategory",
      *     tags={"Catégories"},
      *     summary="Créer une nouvelle catégorie",
@@ -63,6 +64,7 @@ class CategorieController extends Controller
         $categorie = Categorie::create($validated);
 
         return response()->json([
+            'success' => true,
             'message' => 'Catégorie créée avec succès.',
             'data' => $categorie
         ], 201);
@@ -70,7 +72,7 @@ class CategorieController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/categories/{categorie_id}",
+     *     path="/api/admin/categories/{categorie_id}",
      *     operationId="getCategory",
      *     tags={"Catégories"},
      *     summary="Récupérer les détails d'une catégorie",
@@ -88,6 +90,7 @@ class CategorieController extends Controller
     public function show(Categorie $categorie)
     {
         return response()->json([
+            'success' => true,
             'message' => 'Catégorie récupérée avec succès.',
             'data' => $categorie
         ], 200);
@@ -95,7 +98,7 @@ class CategorieController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/categories/{categorie_id}",
+     *     path="/api/admin/categories/{categorie_id}",
      *     operationId="updateCategory",
      *     tags={"Catégories"},
      *     summary="Mettre à jour une catégorie",
@@ -128,10 +131,19 @@ class CategorieController extends Controller
         ]);
 
         // Mise à jour de la catégorie
-        $categorie = Categorie::findOrFail($categorie_id);
+        $categorie = Categorie::find($categorie_id);
+
+        if (!$categorie) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Catégorie non trouvée.'
+            ], 404);
+        }
+
         $categorie->update($validated);
 
         return response()->json([
+            'success' => true,
             'message' => 'Catégorie mise à jour avec succès.',
             'data' => $categorie
         ], 200);
@@ -139,7 +151,7 @@ class CategorieController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/categories/{categorie_id}",
+     *     path="/api/admin/categories/{categorie_id}",
      *     operationId="deleteCategory",
      *     tags={"Catégories"},
      *     summary="Supprimer une catégorie",
@@ -156,10 +168,19 @@ class CategorieController extends Controller
      */
     public function destroy($categorie_id)
     {
-        $categorie = Categorie::findOrFail($categorie_id);
+        $categorie = Categorie::find($categorie_id);
+
+        if (!$categorie) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Catégorie non trouvée.'
+            ], 404);
+        }
+
         $categorie->delete();
 
         return response()->json([
+            'success' => true,
             'message' => 'Catégorie supprimée avec succès.'
         ], 200);
     }

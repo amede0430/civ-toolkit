@@ -21,7 +21,7 @@ class PlanController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/plans",
+     *     path="/api/engineer/plans",
      *     operationId="getPlans",
      *     tags={"Plans"},
      *     summary="Récupérer la liste des plans d'un ingénieur connecté",
@@ -40,12 +40,16 @@ class PlanController extends Controller
             $plan->zip_path = asset('storage/' . $plan->zip_path);
         }
 
-        return response()->json($plans);
+        return response()->json([
+            'success' => true,
+            'message' => 'Liste des plans récupérée avec sucees.',
+            'data' => $plans
+        ]);
     }
 
     /**
      * @OA\Post(
-     *     path="/api/plans",
+     *     path="/api/engineer/plans",
      *     operationId="storePlan",
      *     tags={"Plans"},
      *     summary="Créer un nouveau plan",
@@ -113,12 +117,16 @@ class PlanController extends Controller
         $plan->pdf_path = asset('storage/' . $plan->pdf_path);
         $plan->zip_path = asset('storage/' . $plan->zip_path);
 
-        return response()->json($plan, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Plan créé avec succès.',
+            'data' => $plan
+    ], 201);
     }
 
     /**
      * @OA\Get(
-     *     path="/api/plans/{plan_id}",
+     *     path="/api/engineer/plans/{plan_id}",
      *     operationId="getPlan",
      *     tags={"Plans"},
      *     summary="Récupérer les détails d'un plan",
@@ -135,18 +143,30 @@ class PlanController extends Controller
      */
     public function show($plan_id)
     {
-        $plan = Plan::findOrFail($plan_id);
+        $plan = Plan::find($plan_id);
+
+        if (!$plan) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Plan non trouvé'
+            ], 404);
+        }
+
         // Ajouter les URLs des fichiers à la réponse
         $plan->cover_path = asset('storage/' . $plan->cover_path);
         $plan->pdf_path = asset('storage/' . $plan->pdf_path);
         $plan->zip_path = asset('storage/' . $plan->zip_path);
 
-        return response()->json($plan);
+        return response()->json([
+            'success' => true,
+            'message' => 'Détails du plan récupérés avec succès.',
+            'data' => $plan
+    ]);
     }
 
     /**
      * @OA\Put(
-     *     path="/api/plans/{plan_id}",
+     *     path="/api/engineer/plans/{plan_id}",
      *     operationId="updatePlan",
      *     tags={"Plans"},
      *     summary="Mettre à jour un plan",
@@ -181,7 +201,14 @@ class PlanController extends Controller
     public function update(Request $request, $plan_id)
     {
         // Recherche du plan existant
-        $plan = Plan::findOrFail($plan_id);
+        $plan = Plan::find($plan_id);
+
+        if (!$plan) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Plan non trouvé'
+            ], 404);
+        }
 
         // Validation des données
         $validated = $request->validate([
@@ -226,13 +253,17 @@ class PlanController extends Controller
         $plan->pdf_path = asset('storage/' . $plan->pdf_path);
         $plan->zip_path = asset('storage/' . $plan->zip_path);
 
-        return response()->json($plan, 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Plan mis à jour avec succès.',
+            'data' => $plan
+        ], 200);
     }
 
 
     /**
      * @OA\Delete(
-     *     path="/api/plans/{plan_id}",
+     *     path="/api/engineer/plans/{plan_id}",
      *     operationId="deletePlan",
      *     tags={"Plans"},
      *     summary="Supprimer un plan",
@@ -249,7 +280,14 @@ class PlanController extends Controller
      */
     public function destroy($plan_id)
     {
-        $plan = Plan::findOrFail($plan_id);
+        $plan = Plan::find($plan_id);
+
+        if (!$plan) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Plan non trouvé'
+            ], 404);
+        }
         // Supprimer les fichiers associés
         Storage::disk('public')->delete($plan->cover_path);
         Storage::disk('public')->delete($plan->pdf_path);
@@ -258,6 +296,9 @@ class PlanController extends Controller
         // Supprimer le plan de la base de données
         $plan->delete();
 
-        return response()->json(['message' => 'Plan supprimé avec succès.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Plan supprimé avec succès.'
+        ]);
     }
 }
