@@ -40,13 +40,19 @@ class CategorieController extends Controller
      *     operationId="createCategory",
      *     tags={"Catégories"},
      *     summary="Créer une nouvelle catégorie",
-     *     @OA\RequestBody(
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "description"},
-     *             @OA\Property(property="name", type="string", example="Électronique"),
-     *             @OA\Property(property="description", type="string", example="Catégorie pour les produits électroniques")
-     *         )
+     *         description="Nom de la catégorie",
+     *         @OA\Schema(type="string", example="Électronique")
+     *     ),
+     *     @OA\Parameter(
+     *         name="description",
+     *         in="query",
+     *         required=true,
+     *         description="Description de la catégorie",
+     *         @OA\Schema(type="string", example="Catégorie pour les produits électroniques")
      *     ),
      *     @OA\Response(response=201, description="Catégorie créée avec succès"),
      *     @OA\Response(response=400, description="Données invalides")

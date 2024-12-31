@@ -48,13 +48,19 @@ class RatingController extends Controller
      *     operationId="storeRating",
      *     tags={"Ratings"},
      *     summary="Créer ou mettre à jour une évaluation pour un plan",
-     *     @OA\RequestBody(
+     *     @OA\Parameter(
+     *         name="plan_id",
+     *         in="query",
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"plan_id", "rating"},
-     *             @OA\Property(property="plan_id", type="integer", description="ID du plan évalué"),
-     *             @OA\Property(property="rating", type="integer", description="Note du plan (1-5)")
-     *         )
+     *         description="ID du plan a noter",
+     *         @OA\Schema(type="integer", example="1")
+     *     ),
+     *      @OA\Parameter(
+     *         name="rating",
+     *         in="query",
+     *         required=true,
+     *         description="Note du plan (1-5)",
+     *         @OA\Schema(type="integer", example="3")
      *     ),
      *     @OA\Response(response=201, description="Évaluation enregistrée avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),

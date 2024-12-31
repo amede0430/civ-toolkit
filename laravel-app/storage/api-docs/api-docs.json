@@ -142,30 +142,28 @@
                 ],
                 "summary": "Créer une nouvelle catégorie",
                 "operationId": "createCategory",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "name",
-                                    "description"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Électronique"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "Catégorie pour les produits électroniques"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Nom de la catégorie",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Électronique"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Description de la catégorie",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Catégorie pour les produits électroniques"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "201": {
                         "description": "Catégorie créée avec succès"
@@ -308,30 +306,28 @@
                 ],
                 "summary": "Créer un nouveau commentaire",
                 "operationId": "createComment",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "plan_id",
-                                    "comment"
-                                ],
-                                "properties": {
-                                    "plan_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "comment": {
-                                        "type": "string",
-                                        "example": "Ceci est un commentaire."
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "parameters": [
+                    {
+                        "name": "plan_id",
+                        "in": "query",
+                        "description": "ID du plan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "comment",
+                        "in": "query",
+                        "description": "Commentaire sur le plan",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Ceci est un commentaire."
                         }
                     }
-                },
+                ],
                 "responses": {
                     "201": {
                         "description": "Commentaire créé avec succès"
@@ -701,30 +697,28 @@
                 ],
                 "summary": "Créer ou mettre à jour une évaluation pour un plan",
                 "operationId": "storeRating",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "plan_id",
-                                    "rating"
-                                ],
-                                "properties": {
-                                    "plan_id": {
-                                        "description": "ID du plan évalué",
-                                        "type": "integer"
-                                    },
-                                    "rating": {
-                                        "description": "Note du plan (1-5)",
-                                        "type": "integer"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "parameters": [
+                    {
+                        "name": "plan_id",
+                        "in": "query",
+                        "description": "ID du plan a noter",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "Note du plan (1-5)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "3"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "201": {
                         "description": "Évaluation enregistrée avec succès"
@@ -854,13 +848,13 @@
         "/api/admin/engineers": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Engineers"
                 ],
-                "summary": "Obtenir la liste des utilisateurs ingénieurs",
-                "operationId": "getUsers",
+                "summary": "Obtenir la liste des ingénieurs",
+                "operationId": "getEngineers",
                 "responses": {
                     "200": {
-                        "description": "Liste des utilisateurs récupérée avec succès"
+                        "description": "Liste des ingénieurs récupérée avec succès"
                     },
                     "500": {
                         "description": "Erreur interne"
@@ -869,37 +863,33 @@
             },
             "post": {
                 "tags": [
-                    "Users"
+                    "Engineers"
                 ],
-                "summary": "Enregistrer un nouvel utilisateur ingénieur",
-                "operationId": "createUser",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "name",
-                                    "email"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "description": "Nom de l'utilisateur",
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "description": "Email de l'utilisateur",
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "summary": "Enregistrer un nouvel ingénieur",
+                "operationId": "createEngineer",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Engineer's name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Engineer's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "201": {
-                        "description": "Utilisateur créé avec succès"
+                        "description": "Ingénieur créé avec succès"
                     },
                     "422": {
                         "description": "Données invalides"
@@ -907,16 +897,16 @@
                 }
             }
         },
-        "/api/admin/engineers/{user_id}": {
+        "/api/admin/engineers/{engineer_id}": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Engineers"
                 ],
-                "summary": "Afficher les détails d'un utilisateur spécifique",
-                "operationId": "getUser",
+                "summary": "Afficher les détails d'un ingénieur spécifique",
+                "operationId": "getEngineer",
                 "parameters": [
                     {
-                        "name": "user_id",
+                        "name": "engineer_id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -926,22 +916,22 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Utilisateur récupéré avec succès"
+                        "description": "Ingénieur récupéré avec succès"
                     },
                     "404": {
-                        "description": "Utilisateur non trouvé"
+                        "description": "Ingénieur non trouvé"
                     }
                 }
             },
             "put": {
                 "tags": [
-                    "Users"
+                    "Engineers"
                 ],
-                "summary": "Mettre à jour un utilisateur existant",
-                "operationId": "updateUser",
+                "summary": "Mettre à jour un ingénieur existant",
+                "operationId": "updateEngineer",
                 "parameters": [
                     {
-                        "name": "user_id",
+                        "name": "engineer_id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -956,11 +946,11 @@
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "description": "Nom de l'utilisateur",
+                                        "description": "Nom de l'ingénieur",
                                         "type": "string"
                                     },
                                     "email": {
-                                        "description": "Email de l'utilisateur",
+                                        "description": "Email de l'ingénieur",
                                         "type": "string"
                                     }
                                 },
@@ -971,25 +961,25 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Utilisateur mis à jour avec succès"
+                        "description": "Ingénieur mis à jour avec succès"
                     },
                     "422": {
                         "description": "Données invalides"
                     },
                     "404": {
-                        "description": "Utilisateur non trouvé"
+                        "description": "Ingénieur non trouvé"
                     }
                 }
             },
             "delete": {
                 "tags": [
-                    "Users"
+                    "Engineers"
                 ],
-                "summary": "Supprimer un utilisateur existant",
-                "operationId": "deleteUser",
+                "summary": "Supprimer un ingénieur existant",
+                "operationId": "deleteEngineer",
                 "parameters": [
                     {
-                        "name": "user_id",
+                        "name": "engineer_id",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -999,10 +989,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Utilisateur supprimé avec succès"
+                        "description": "Ingénieur supprimé avec succès"
                     },
                     "404": {
-                        "description": "Utilisateur non trouvé"
+                        "description": "Ingénieur non trouvé"
                     }
                 }
             }
@@ -1085,8 +1075,8 @@
             "description": "Gestion des évaluations des plans"
         },
         {
-            "name": "Users",
-            "description": "Gestion des utilisateurs"
+            "name": "Engineers",
+            "description": "Gestion des ingenieurs"
         },
         {
             "name": "Authentification",

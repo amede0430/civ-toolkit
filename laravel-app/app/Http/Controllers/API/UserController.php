@@ -14,8 +14,8 @@ use App\Models\User;
 
 /**
  * @OA\Tag(
- *     name="Users",
- *     description="Gestion des utilisateurs"
+ *     name="Engineers",
+ *     description="Gestion des ingenieurs"
  * )
  */
 class UserController extends Controller
@@ -23,10 +23,10 @@ class UserController extends Controller
     /**
      * @OA\Get(
      *     path="/api/admin/engineers",
-     *     operationId="getUsers",
-     *     tags={"Users"},
-     *     summary="Obtenir la liste des utilisateurs ingénieurs",
-     *     @OA\Response(response=200, description="Liste des utilisateurs récupérée avec succès"),
+     *     operationId="getEngineers",
+     *     tags={"Engineers"},
+     *     summary="Obtenir la liste des ingénieurs",
+     *     @OA\Response(response=200, description="Liste des ingénieurs récupérée avec succès"),
      *     @OA\Response(response=500, description="Erreur interne")
      * )
      */
@@ -35,26 +35,41 @@ class UserController extends Controller
         $users = User::with('plans')->where('role', 'engineer')->get();
         return response()->json([
             'success' => true,
-            'message' => 'Liste des utilisateurs recuperée avec sucees.',
+            'message' => 'Liste des ingénieurs recuperée avec sucees.',
             'data' => $users
         ], 200);
     }
 
+    // @OA\RequestBody(
+    //     required=true,
+    //     @OA\JsonContent(
+    //         required={"name", "email"},
+    //         @OA\Property(property="name", type="string", description="Nom de l'ingénieur"),
+    //         @OA\Property(property="email", type="string", description="Email de l'ingénieur")
+    //     )
+    // ),
+
     /**
      * @OA\Post(
      *     path="/api/admin/engineers",
-     *     operationId="createUser",
-     *     tags={"Users"},
-     *     summary="Enregistrer un nouvel utilisateur ingénieur",
-     *     @OA\RequestBody(
+     *     operationId="createEngineer",
+     *     tags={"Engineers"},
+     *     summary="Enregistrer un nouvel ingénieur",
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Engineer's name",
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "email"},
-     *             @OA\Property(property="name", type="string", description="Nom de l'utilisateur"),
-     *             @OA\Property(property="email", type="string", description="Email de l'utilisateur")
-     *         )
+     *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(response=201, description="Utilisateur créé avec succès"),
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="Engineer's email",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response=201, description="Ingénieur créé avec succès"),
      *     @OA\Response(response=422, description="Données invalides")
      * )
      */
@@ -98,45 +113,45 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/admin/engineers/{user_id}",
-     *     operationId="getUser",
-     *     tags={"Users"},
-     *     summary="Afficher les détails d'un utilisateur spécifique",
+     *     path="/api/admin/engineers/{engineer_id}",
+     *     operationId="getEngineer",
+     *     tags={"Engineers"},
+     *     summary="Afficher les détails d'un ingénieur spécifique",
      *     @OA\Parameter(
-     *         name="user_id",
+     *         name="engineer_id",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response=200, description="Utilisateur récupéré avec succès"),
-     *     @OA\Response(response=404, description="Utilisateur non trouvé")
+     *     @OA\Response(response=200, description="Ingénieur récupéré avec succès"),
+     *     @OA\Response(response=404, description="Ingénieur non trouvé")
      * )
      */
     public function show($user_id)
     {
-        $user = User::with('plans')->find($user_id);
+        $user = User::with('plans')->where('role', 'engineer')->find($user_id);
         if (!$user) {
             return response()->json([
                 // 'success' => false,
-                'message' => 'Utilisateur non trouvé'
+                'message' => 'Ingénieur non trouvé'
             ], 404);
         }
         
         return response()->json([
             'success' => true,
-            'message' => 'Utilisateur récupéré avec succès',
+            'message' => 'Ingénieur récupéré avec succès',
             'data' => $user
         ], 200);
     }
 
     /**
      * @OA\Put(
-     *     path="/api/admin/engineers/{user_id}",
-     *     operationId="updateUser",
-     *     tags={"Users"},
-     *     summary="Mettre à jour un utilisateur existant",
+     *     path="/api/admin/engineers/{engineer_id}",
+     *     operationId="updateEngineer",
+     *     tags={"Engineers"},
+     *     summary="Mettre à jour un ingénieur existant",
      *     @OA\Parameter(
-     *         name="user_id",
+     *         name="engineer_id",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
@@ -144,13 +159,13 @@ class UserController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="name", type="string", description="Nom de l'utilisateur"),
-     *             @OA\Property(property="email", type="string", description="Email de l'utilisateur")
+     *             @OA\Property(property="name", type="string", description="Nom de l'ingénieur"),
+     *             @OA\Property(property="email", type="string", description="Email de l'ingénieur")
      *         )
      *     ),
-     *     @OA\Response(response=200, description="Utilisateur mis à jour avec succès"),
+     *     @OA\Response(response=200, description="Ingénieur mis à jour avec succès"),
      *     @OA\Response(response=422, description="Données invalides"),
-     *     @OA\Response(response=404, description="Utilisateur non trouvé")
+     *     @OA\Response(response=404, description="Ingénieur non trouvé")
      * )
      */
     public function update(Request $request, $user_id)
@@ -160,7 +175,7 @@ class UserController extends Controller
         if (!$user) {
             return response()->json([
                 // 'success' => false,
-                'message' => 'Utilisateur non trouvé'
+                'message' => 'Ingénieur non trouvé'
             ], 404);
         }
 
@@ -200,18 +215,18 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/admin/engineers/{user_id}",
-     *     operationId="deleteUser",
-     *     tags={"Users"},
-     *     summary="Supprimer un utilisateur existant",
+     *     path="/api/admin/engineers/{engineer_id}",
+     *     operationId="deleteEngineer",
+     *     tags={"Engineers"},
+     *     summary="Supprimer un ingénieur existant",
      *     @OA\Parameter(
-     *         name="user_id",
+     *         name="engineer_id",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response=200, description="Utilisateur supprimé avec succès"),
-     *     @OA\Response(response=404, description="Utilisateur non trouvé")
+     *     @OA\Response(response=200, description="Ingénieur supprimé avec succès"),
+     *     @OA\Response(response=404, description="Ingénieur non trouvé")
      * )
      */
     public function destroy($user_id)
@@ -220,7 +235,7 @@ class UserController extends Controller
         if (!$user) {
             return response()->json([
                 // 'success' => false,
-                'message' => 'Utilisateur non trouvé'
+                'message' => 'Ingénieur non trouvé'
             ], 404);
         }
 
@@ -283,7 +298,7 @@ class UserController extends Controller
             $plan->save();
         }
 
-        // Récupérer l'utilisateur lié au plan
+        // Récupérer l'ingénieur lié au plan
         $user = $plan->user;
 
         // Préparer les informations pour la notification par mail

@@ -36,13 +36,19 @@ class CommentController extends Controller
      *     operationId="createComment",
      *     tags={"Commentaires"},
      *     summary="Créer un nouveau commentaire",
-     *     @OA\RequestBody(
+     *     @OA\Parameter(
+     *         name="plan_id",
+     *         in="query",
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"plan_id", "comment"},
-     *             @OA\Property(property="plan_id", type="integer", example=1),
-     *             @OA\Property(property="comment", type="string", example="Ceci est un commentaire.")
-     *         )
+     *         description="ID du plan",
+     *         @OA\Schema(type="integer", example="1")
+     *     ),
+     *      @OA\Parameter(
+     *         name="comment",
+     *         in="query",
+     *         required=true,
+     *         description="Commentaire sur le plan",
+     *         @OA\Schema(type="string", example="Ceci est un commentaire.")
      *     ),
      *     @OA\Response(response=201, description="Commentaire créé avec succès"),
      *     @OA\Response(response=422, description="Données invalides")
