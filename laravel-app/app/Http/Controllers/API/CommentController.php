@@ -18,7 +18,8 @@ class CommentController extends Controller
      *     tags={"Commentaires"},
      *     summary="Récupérer la liste des commentaires",
      *     @OA\Response(response=200, description="Liste des commentaires récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function index()
@@ -51,7 +52,8 @@ class CommentController extends Controller
      *         @OA\Schema(type="string", example="Ceci est un commentaire.")
      *     ),
      *     @OA\Response(response=201, description="Commentaire créé avec succès"),
-     *     @OA\Response(response=422, description="Données invalides")
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function store(Request $request)
@@ -95,7 +97,8 @@ class CommentController extends Controller
      *         @OA\Schema(type="string", example="1")
      *     ),
      *     @OA\Response(response=200, description="Commentaire récupéré avec succès"),
-     *     @OA\Response(response=404, description="Commentaire non trouvé")
+     *     @OA\Response(response=404, description="Commentaire non trouvé"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function show(string $id)
@@ -137,7 +140,8 @@ class CommentController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Commentaire mis à jour avec succès"),
      *     @OA\Response(response=422, description="Données invalides"),
-     *     @OA\Response(response=404, description="Commentaire non trouvé")
+     *     @OA\Response(response=404, description="Commentaire non trouvé"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function update(Request $request, string $id)
@@ -190,7 +194,8 @@ class CommentController extends Controller
      *         @OA\Schema(type="string", example="1")
      *     ),
      *     @OA\Response(response=200, description="Commentaire supprimé avec succès"),
-     *     @OA\Response(response=404, description="Commentaire non trouvé")
+     *     @OA\Response(response=404, description="Commentaire non trouvé"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function destroy(string $id)

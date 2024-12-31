@@ -27,7 +27,8 @@ class UserController extends Controller
      *     tags={"Engineers"},
      *     summary="Obtenir la liste des ingénieurs",
      *     @OA\Response(response=200, description="Liste des ingénieurs récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function index()
@@ -70,7 +71,8 @@ class UserController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response=201, description="Ingénieur créé avec succès"),
-     *     @OA\Response(response=422, description="Données invalides")
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function store(Request $request)
@@ -124,7 +126,8 @@ class UserController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(response=200, description="Ingénieur récupéré avec succès"),
-     *     @OA\Response(response=404, description="Ingénieur non trouvé")
+     *     @OA\Response(response=404, description="Ingénieur non trouvé"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function show($user_id)
@@ -165,7 +168,8 @@ class UserController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Ingénieur mis à jour avec succès"),
      *     @OA\Response(response=422, description="Données invalides"),
-     *     @OA\Response(response=404, description="Ingénieur non trouvé")
+     *     @OA\Response(response=404, description="Ingénieur non trouvé"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function update(Request $request, $user_id)
@@ -226,7 +230,8 @@ class UserController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(response=200, description="Ingénieur supprimé avec succès"),
-     *     @OA\Response(response=404, description="Ingénieur non trouvé")
+     *     @OA\Response(response=404, description="Ingénieur non trouvé"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function destroy($user_id)
@@ -269,7 +274,8 @@ class UserController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Décision prise avec succès"),
      *     @OA\Response(response=422, description="Données invalides"),
-     *     @OA\Response(response=404, description="Plan non trouvé")
+     *     @OA\Response(response=404, description="Plan non trouvé"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function accept_plan(Request $request, $user_id, $plan_id)

@@ -26,7 +26,8 @@ class RatingController extends Controller
      *     tags={"Ratings"},
      *     summary="Obtenir la liste des évaluations de l'utilisateur connecté",
      *     @OA\Response(response=200, description="Liste des évaluations récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function index()
@@ -64,7 +65,8 @@ class RatingController extends Controller
      *     ),
      *     @OA\Response(response=201, description="Évaluation enregistrée avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function store(Request $request)
@@ -116,7 +118,8 @@ class RatingController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Évaluation récupérée avec succès"),
      *     @OA\Response(response=404, description="Évaluation non trouvée"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function show(string $id)
@@ -160,7 +163,8 @@ class RatingController extends Controller
      *     @OA\Response(response=200, description="Évaluation mise à jour avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),
      *     @OA\Response(response=404, description="Évaluation non trouvée"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function update(Request $request, string $id)
@@ -212,7 +216,8 @@ class RatingController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Évaluation supprimée avec succès"),
      *     @OA\Response(response=404, description="Évaluation non trouvée"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function destroy($id)

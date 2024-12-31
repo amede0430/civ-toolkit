@@ -21,7 +21,8 @@ class CategorieController extends Controller
      *     tags={"Catégories"},
      *     summary="Récupérer la liste des catégories",
      *     @OA\Response(response=200, description="Liste des catégories récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function index()
@@ -55,7 +56,8 @@ class CategorieController extends Controller
      *         @OA\Schema(type="string", example="Catégorie pour les produits électroniques")
      *     ),
      *     @OA\Response(response=201, description="Catégorie créée avec succès"),
-     *     @OA\Response(response=400, description="Données invalides")
+     *     @OA\Response(response=400, description="Données invalides"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function store(Request $request)
@@ -90,7 +92,8 @@ class CategorieController extends Controller
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Response(response=200, description="Catégorie récupérée avec succès"),
-     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     *     @OA\Response(response=404, description="Catégorie non trouvée"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function show(Categorie $categorie)
@@ -125,7 +128,8 @@ class CategorieController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Catégorie mise à jour avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),
-     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     *     @OA\Response(response=404, description="Catégorie non trouvée"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function update(Request $request, $categorie_id)
@@ -169,7 +173,8 @@ class CategorieController extends Controller
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Response(response=200, description="Catégorie supprimée avec succès"),
-     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     *     @OA\Response(response=404, description="Catégorie non trouvée"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function destroy($categorie_id)

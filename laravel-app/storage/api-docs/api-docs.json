@@ -134,7 +134,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -171,7 +176,12 @@
                     "400": {
                         "description": "Données invalides"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/categories/{categorie_id}": {
@@ -200,7 +210,12 @@
                     "404": {
                         "description": "Catégorie non trouvée"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -254,7 +269,12 @@
                     "404": {
                         "description": "Catégorie non trouvée"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -281,7 +301,12 @@
                     "404": {
                         "description": "Catégorie non trouvée"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/comments": {
@@ -298,7 +323,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -335,7 +365,12 @@
                     "422": {
                         "description": "Données invalides"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/comments/{id}": {
@@ -364,7 +399,12 @@
                     "404": {
                         "description": "Commentaire non trouvé"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -418,7 +458,12 @@
                     "404": {
                         "description": "Commentaire non trouvé"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -445,7 +490,12 @@
                     "404": {
                         "description": "Commentaire non trouvé"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/engineer/plans": {
@@ -462,7 +512,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -533,7 +588,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/engineer/plans/{plan_id}": {
@@ -563,7 +623,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -644,7 +709,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -672,7 +742,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/ratings": {
@@ -689,7 +764,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -729,7 +809,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/ratings/{id}": {
@@ -759,7 +844,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -814,7 +904,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -842,7 +937,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/engineers": {
@@ -859,7 +959,12 @@
                     "500": {
                         "description": "Erreur interne"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -894,7 +999,12 @@
                     "422": {
                         "description": "Données invalides"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/engineers/{engineer_id}": {
@@ -921,7 +1031,12 @@
                     "404": {
                         "description": "Ingénieur non trouvé"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -969,7 +1084,12 @@
                     "404": {
                         "description": "Ingénieur non trouvé"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -994,7 +1114,12 @@
                     "404": {
                         "description": "Ingénieur non trouvé"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/accept/plan/{plan_id}": {
@@ -1048,7 +1173,12 @@
                     "404": {
                         "description": "Plan non trouvé"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
