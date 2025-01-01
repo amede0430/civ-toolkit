@@ -26,7 +26,8 @@ class RatingController extends Controller
      *     tags={"Ratings"},
      *     summary="Obtenir la liste des évaluations de l'utilisateur connecté",
      *     @OA\Response(response=200, description="Liste des évaluations récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function index()
@@ -48,17 +49,24 @@ class RatingController extends Controller
      *     operationId="storeRating",
      *     tags={"Ratings"},
      *     summary="Créer ou mettre à jour une évaluation pour un plan",
-     *     @OA\RequestBody(
+     *     @OA\Parameter(
+     *         name="plan_id",
+     *         in="query",
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"plan_id", "rating"},
-     *             @OA\Property(property="plan_id", type="integer", description="ID du plan évalué"),
-     *             @OA\Property(property="rating", type="integer", description="Note du plan (1-5)")
-     *         )
+     *         description="ID du plan a noter",
+     *         @OA\Schema(type="integer", example="1")
+     *     ),
+     *      @OA\Parameter(
+     *         name="rating",
+     *         in="query",
+     *         required=true,
+     *         description="Note du plan (1-5)",
+     *         @OA\Schema(type="integer", example="3")
      *     ),
      *     @OA\Response(response=201, description="Évaluation enregistrée avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function store(Request $request)
@@ -110,7 +118,8 @@ class RatingController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Évaluation récupérée avec succès"),
      *     @OA\Response(response=404, description="Évaluation non trouvée"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function show(string $id)
@@ -154,7 +163,8 @@ class RatingController extends Controller
      *     @OA\Response(response=200, description="Évaluation mise à jour avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),
      *     @OA\Response(response=404, description="Évaluation non trouvée"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function update(Request $request, string $id)
@@ -206,7 +216,8 @@ class RatingController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Évaluation supprimée avec succès"),
      *     @OA\Response(response=404, description="Évaluation non trouvée"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function destroy($id)

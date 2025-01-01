@@ -26,7 +26,8 @@ class PlanController extends Controller
      *     tags={"Plans"},
      *     summary="Récupérer la liste des plans d'un ingénieur connecté",
      *     @OA\Response(response=200, description="Liste des plans récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function index()
@@ -71,7 +72,8 @@ class PlanController extends Controller
      *     ),
      *     @OA\Response(response=201, description="Plan créé avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function store(Request $request)
@@ -138,7 +140,8 @@ class PlanController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Détails du plan récupérés avec succès"),
      *     @OA\Response(response=404, description="Plan non trouvé"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function show($plan_id)
@@ -195,7 +198,8 @@ class PlanController extends Controller
      *     @OA\Response(response=200, description="Plan mis à jour avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),
      *     @OA\Response(response=404, description="Plan non trouvé"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function update(Request $request, $plan_id)
@@ -275,7 +279,8 @@ class PlanController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Plan supprimé avec succès"),
      *     @OA\Response(response=404, description="Plan non trouvé"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function destroy($plan_id)

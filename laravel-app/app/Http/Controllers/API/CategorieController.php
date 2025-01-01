@@ -21,7 +21,8 @@ class CategorieController extends Controller
      *     tags={"Catégories"},
      *     summary="Récupérer la liste des catégories",
      *     @OA\Response(response=200, description="Liste des catégories récupérée avec succès"),
-     *     @OA\Response(response=500, description="Erreur interne")
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function index()
@@ -40,16 +41,23 @@ class CategorieController extends Controller
      *     operationId="createCategory",
      *     tags={"Catégories"},
      *     summary="Créer une nouvelle catégorie",
-     *     @OA\RequestBody(
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "description"},
-     *             @OA\Property(property="name", type="string", example="Électronique"),
-     *             @OA\Property(property="description", type="string", example="Catégorie pour les produits électroniques")
-     *         )
+     *         description="Nom de la catégorie",
+     *         @OA\Schema(type="string", example="Électronique")
+     *     ),
+     *     @OA\Parameter(
+     *         name="description",
+     *         in="query",
+     *         required=true,
+     *         description="Description de la catégorie",
+     *         @OA\Schema(type="string", example="Catégorie pour les produits électroniques")
      *     ),
      *     @OA\Response(response=201, description="Catégorie créée avec succès"),
-     *     @OA\Response(response=400, description="Données invalides")
+     *     @OA\Response(response=400, description="Données invalides"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function store(Request $request)
@@ -84,7 +92,8 @@ class CategorieController extends Controller
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Response(response=200, description="Catégorie récupérée avec succès"),
-     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     *     @OA\Response(response=404, description="Catégorie non trouvée"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function show(Categorie $categorie)
@@ -119,7 +128,8 @@ class CategorieController extends Controller
      *     ),
      *     @OA\Response(response=200, description="Catégorie mise à jour avec succès"),
      *     @OA\Response(response=400, description="Données invalides"),
-     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     *     @OA\Response(response=404, description="Catégorie non trouvée"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function update(Request $request, $categorie_id)
@@ -163,7 +173,8 @@ class CategorieController extends Controller
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Response(response=200, description="Catégorie supprimée avec succès"),
-     *     @OA\Response(response=404, description="Catégorie non trouvée")
+     *     @OA\Response(response=404, description="Catégorie non trouvée"),
+     *     security={{"bearerAuth":{}}}
      * )
      */
     public function destroy($categorie_id)
