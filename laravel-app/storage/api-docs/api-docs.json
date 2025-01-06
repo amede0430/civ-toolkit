@@ -540,6 +540,10 @@
                                     "zip_path"
                                 ],
                                 "properties": {
+                                    "category_id": {
+                                        "description": "ID de la categorie",
+                                        "type": "integer"
+                                    },
                                     "title": {
                                         "description": "Titre du plan",
                                         "type": "string"
@@ -554,8 +558,8 @@
                                         "format": "float"
                                     },
                                     "free": {
-                                        "description": "Plan gratuit ou payant",
-                                        "type": "boolean"
+                                        "description": "Plan gratuit ou payant (0: gratuit, 1: payant)",
+                                        "type": "integer"
                                     },
                                     "cover_path": {
                                         "description": "Image de couverture du plan",
@@ -630,7 +634,42 @@
                     }
                 ]
             },
-            "put": {
+            "delete": {
+                "tags": [
+                    "Plans"
+                ],
+                "summary": "Supprimer un plan",
+                "operationId": "deletePlan",
+                "parameters": [
+                    {
+                        "name": "plan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Plan supprimé avec succès"
+                    },
+                    "404": {
+                        "description": "Plan non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/engineer/plans/{plan_id}?_method=PUT": {
+            "post": {
                 "tags": [
                     "Plans"
                 ],
@@ -652,12 +691,17 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
+                                    "category_id",
                                     "title",
                                     "description",
                                     "price",
                                     "free"
                                 ],
                                 "properties": {
+                                    "category_id": {
+                                        "description": "ID de la categorie du plan a MAJ",
+                                        "type": "integer"
+                                    },
                                     "title": {
                                         "description": "Titre du plan",
                                         "type": "string"
@@ -672,8 +716,8 @@
                                         "format": "float"
                                     },
                                     "free": {
-                                        "description": "Plan gratuit ou payant",
-                                        "type": "boolean"
+                                        "description": "Plan gratuit ou payant (0: gratuit, 1: payant)",
+                                        "type": "integer"
                                     },
                                     "cover_path": {
                                         "description": "Image de couverture du plan",
@@ -702,39 +746,6 @@
                     },
                     "400": {
                         "description": "Données invalides"
-                    },
-                    "404": {
-                        "description": "Plan non trouvé"
-                    },
-                    "500": {
-                        "description": "Erreur interne"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Plans"
-                ],
-                "summary": "Supprimer un plan",
-                "operationId": "deletePlan",
-                "parameters": [
-                    {
-                        "name": "plan_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Plan supprimé avec succès"
                     },
                     "404": {
                         "description": "Plan non trouvé"

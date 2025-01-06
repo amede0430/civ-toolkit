@@ -96,9 +96,16 @@ class CategorieController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-    public function show(Categorie $categorie)
+    public function show(string $categorie_id)
     {
-        return response()->json([
+        $categorie = Categorie::find($categorie_id);
+
+        if (!$categorie) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Catégorie non trouvée.'
+            ], 404);
+        }        return response()->json([
             'success' => true,
             'message' => 'Catégorie récupérée avec succès.',
             'data' => $categorie

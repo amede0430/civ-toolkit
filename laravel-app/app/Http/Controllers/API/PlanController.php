@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * @OA\Tag(
@@ -60,10 +61,11 @@ class PlanController extends Controller
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
      *                 required={"title", "description", "price", "free", "cover_path", "pdf_path", "zip_path"},
+     *                 @OA\Property(property="category_id", type="integer", description="ID de la categorie"),
      *                 @OA\Property(property="title", type="string", description="Titre du plan"),
      *                 @OA\Property(property="description", type="string", description="Description du plan"),
      *                 @OA\Property(property="price", type="number", format="float", description="Prix du plan"),
-     *                 @OA\Property(property="free", type="boolean", description="Plan gratuit ou payant"),
+     *                 @OA\Property(property="free", type="integer", description="Plan gratuit ou payant (0: gratuit, 1: payant)"),
      *                 @OA\Property(property="cover_path", type="string", format="binary", description="Image de couverture du plan"),
      *                 @OA\Property(property="pdf_path", type="string", format="binary", description="PDF du plan"),
      *                 @OA\Property(property="zip_path", type="string", format="binary", description="Fichier ZIP du plan")
@@ -80,7 +82,7 @@ class PlanController extends Controller
     {
         // Validation des données
         $validated = $request->validate([
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
@@ -168,8 +170,8 @@ class PlanController extends Controller
     }
 
     /**
-     * @OA\Put(
-     *     path="/api/engineer/plans/{plan_id}",
+     * @OA\Post(
+     *     path="/api/engineer/plans/{plan_id}?_method=PUT",
      *     operationId="updatePlan",
      *     tags={"Plans"},
      *     summary="Mettre à jour un plan",
@@ -184,11 +186,12 @@ class PlanController extends Controller
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
-     *                 required={"title", "description", "price", "free"},
+     *                 required={"category_id","title", "description", "price", "free"},
+     *                 @OA\Property(property="category_id", type="integer", description="ID de la categorie du plan a MAJ"),
      *                 @OA\Property(property="title", type="string", description="Titre du plan"),
      *                 @OA\Property(property="description", type="string", description="Description du plan"),
      *                 @OA\Property(property="price", type="number", format="float", description="Prix du plan"),
-     *                 @OA\Property(property="free", type="boolean", description="Plan gratuit ou payant"),
+     *                 @OA\Property(property="free", type="integer", description="Plan gratuit ou payant (0: gratuit, 1: payant)"),
      *                 @OA\Property(property="cover_path", type="string", format="binary", description="Image de couverture du plan"),
      *                 @OA\Property(property="pdf_path", type="string", format="binary", description="PDF du plan"),
      *                 @OA\Property(property="zip_path", type="string", format="binary", description="Fichier ZIP du plan")
@@ -214,9 +217,8 @@ class PlanController extends Controller
             ], 404);
         }
 
-        // Validation des données
-        $validated = $request->validate([
-            'category_id' => 'nullable|exists:categories,id',
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
@@ -226,12 +228,19 @@ class PlanController extends Controller
             'zip_path' => 'nullable|mimes:zip,rar|max:10240',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
+
         // Mise à jour des propriétés
-        $plan->title = $validated['title'];
-        $plan->description = $validated['description'];
-        $plan->price = $validated['price'];
-        $plan->free = $validated['free'];
-        $plan->category_id = $validated['category_id'] ?? $plan->category_id;
+        $plan->title = $request->title;
+        $plan->description = $request->description;
+        $plan->price = $request->price;
+        $plan->free = $request->free;
+        $plan->category_id = $request->category_id ?? $plan->category_id;
 
         // Si des fichiers sont envoyés, les enregistrer et mettre à jour les chemins
         if ($request->hasFile('cover_path')) {
