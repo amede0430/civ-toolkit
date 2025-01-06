@@ -1,35 +1,74 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-/**
-  This file is used for controlling the global states of the components,
-  you can customize the states for the different components here.
-*/
-
-import { createContext, useContext, useReducer, useMemo } from "react";
-
-// prop-types is a library for typechecking of props
+import { createContext, useContext, useReducer, useMemo, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-
-// Material Dashboard 2 React main context
+import { useLocation, useNavigate } from "react-router-dom";
 const MaterialUI = createContext();
 
-// Setting custom name for the context which is visible on react dev tools
+export const AuthContext = createContext({
+  role: null,
+  isAuthenticated: false,
+  login: () => {},
+  register: () => {},
+  logout: () => {},
+});
+
+const AuthContextProvider = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [role, setRole] = useState(() => localStorage.getItem("role") || null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!token && !localStorage.getItem("role") ) {
+      navigate("/authentication/sign-in");
+      return;
+    }
+    
+    setRole(localStorage.getItem("role"))
+    setIsAuthenticated(true);
+    navigate(location.pathname); 
+  }, [token, isAuthenticated, navigate, location.pathname]);
+  
+
+  const login = (token, userRole) => {
+    console.log("cc")
+    localStorage.setItem("token", token);
+    localStorage.setItem("role", userRole);
+    console.log(token,userRole)
+    setRole(userRole)
+    setIsAuthenticated(true);
+    if(userRole === "admin"){
+      navigate("/dashboard");
+    } else if(userRole === "customer"){
+    navigate("/presentation");
+    // } else if(userRole === "parent") {
+    //   navigate("/en-attente");
+    }
+  };
+
+  const register = () => {
+    navigate("/authentication/sign-in") /*MODIFIE*/
+  }
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    setIsAuthenticated(false);
+    setRole(null)
+    navigate("/authentication/sign-in");
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, role, login , logout, register }}>
+      {children}
+    </AuthContext.Provider>
+  )
+};
+
 MaterialUI.displayName = "MaterialUIContext";
 
-// Material Dashboard 2 React reducer
 function reducer(state, action) {
   switch (action.type) {
     case "MINI_SIDENAV": {
@@ -68,7 +107,6 @@ function reducer(state, action) {
   }
 }
 
-// Material Dashboard 2 React context provider
 function MaterialUIControllerProvider({ children }) {
   const initialState = {
     miniSidenav: false,
@@ -79,18 +117,16 @@ function MaterialUIControllerProvider({ children }) {
     fixedNavbar: true,
     openConfigurator: false,
     direction: "ltr",
-    layout: "qwerty",
+    layout: "Presentation",
     darkMode: false,
   };
 
   const [controller, dispatch] = useReducer(reducer, initialState);
-
   const value = useMemo(() => [controller, dispatch], [controller, dispatch]);
 
   return <MaterialUI.Provider value={value}>{children}</MaterialUI.Provider>;
 }
 
-// Material Dashboard 2 React custom hook for using context
 function useMaterialUIController() {
   const context = useContext(MaterialUI);
 
@@ -103,12 +139,10 @@ function useMaterialUIController() {
   return context;
 }
 
-// Typechecking props for the MaterialUIControllerProvider
 MaterialUIControllerProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-// Context module functions
 const setMiniSidenav = (dispatch, value) => dispatch({ type: "MINI_SIDENAV", value });
 const setTransparentSidenav = (dispatch, value) => dispatch({ type: "TRANSPARENT_SIDENAV", value });
 const setWhiteSidenav = (dispatch, value) => dispatch({ type: "WHITE_SIDENAV", value });
@@ -121,6 +155,7 @@ const setLayout = (dispatch, value) => dispatch({ type: "LAYOUT", value });
 const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
 
 export {
+  AuthContextProvider,
   MaterialUIControllerProvider,
   useMaterialUIController,
   setMiniSidenav,

@@ -1,36 +1,93 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import GoogleIcon from "@mui/icons-material/Google";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import MKInput from "components/MKInput";
 import MKButton from "components/MKButton";
-import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import SimpleFooter from "examples/Footers/SimpleFooter";
-import routes from "routes";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import { AuthContext } from "context";
+import AuthService from "services/auth-service"; // Importez votre service d'authentification ici.
 
 function SignUpBasic() {
+  const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  
+  const [alert, setAlert] = useState({ open: false, message: "", type: "" });
+  const [inputs, setInputs] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [errors, setErrors] = useState({
+    nameError: false,
+    emailError: false,
+    passwordError: false,
+    confirmPasswordError: false,
+    error: false,
+    errorText: "",
+  });
+
+  useEffect(() => {
+    if (alert.open) {
+      const timer = setTimeout(() => setAlert({ open: false, message: "", type: "" }), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
+
+  const changeHandler = (e) => {
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    if (!inputs.name.trim()) return setErrors({ ...errors, nameError: true });
+    if (!inputs.email.match(mailFormat)) return setErrors({ ...errors, emailError: true });
+    if (inputs.password.length < 6) return setErrors({ ...errors, passwordError: true });
+    if (inputs.password !== inputs.confirmPassword)
+      return setErrors({ ...errors, confirmPasswordError: true });
+
+    try {
+      await AuthService.register({
+        name: inputs.name,
+        email: inputs.email,
+        password: inputs.password,
+      });
+      setAlert({
+        open: true,
+        message: "Inscription réussie ! Un email de confirmation a été envoyé.",
+        type: "success",
+      });
+      setInputs({ name: "", email: "", password: "", confirmPassword: "" });
+      setErrors({});
+      authContext.register();
+    } catch (err) {
+      setErrors({ ...errors, error: true, errorText: err.message });
+      setAlert({
+        open: true,
+        message: "Une erreur est survenue. Veuillez réessayer.",
+        type: "error",
+      });
+    }
+  };
+
+  const retour = () => navigate(-1);
+
   return (
     <>
-      <DefaultNavbar
-        routes={routes}
-        action={{
-          type: "internal",
-          route: "/pages/authentification/sign-up",
-          label: "s'inscrire",
-          color: "info",
-        }}
-        transparent
-        light
-      />
       <MKBox
         position="absolute"
         top={0}
@@ -67,41 +124,56 @@ function SignUpBasic() {
                 <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
                   Sign up
                 </MKTypography>
-                <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-                  <Grid item xs={2}>
-                    <MKTypography component={MuiLink} href="#" variant="body1" color="white">
-                      <FacebookIcon color="inherit" />
-                    </MKTypography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <MKTypography component={MuiLink} href="#" variant="body1" color="white">
-                      <GitHubIcon color="inherit" />
-                    </MKTypography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <MKTypography component={MuiLink} href="#" variant="body1" color="white">
-                      <GoogleIcon color="inherit" />
-                    </MKTypography>
-                  </Grid>
-                </Grid>
               </MKBox>
               <MKBox pt={4} pb={3} px={3}>
-                <MKBox component="form" role="form">
+                <MKBox component="form" role="form" onSubmit={submitHandler}>
                   <MKBox mb={2}>
-                    <MKInput type="text" label="Name" fullWidth />
+                    <MKInput
+                      name="name"
+                      type="text"
+                      label="Name"
+                      fullWidth
+                      value={inputs.name}
+                      onChange={changeHandler}
+                      error={errors.nameError}
+                    />
                   </MKBox>
                   <MKBox mb={2}>
-                    <MKInput type="email" label="Email" fullWidth />
+                    <MKInput
+                      name="email"
+                      type="email"
+                      label="Email"
+                      fullWidth
+                      value={inputs.email}
+                      onChange={changeHandler}
+                      error={errors.emailError}
+                    />
                   </MKBox>
                   <MKBox mb={2}>
-                    <MKInput type="password" label="Password" fullWidth />
+                    <MKInput
+                      name="password"
+                      type="password"
+                      label="Password"
+                      fullWidth
+                      value={inputs.password}
+                      onChange={changeHandler}
+                      error={errors.passwordError}
+                    />
                   </MKBox>
                   <MKBox mb={2}>
-                    <MKInput type="password" label="Confirm Password" fullWidth />
+                    <MKInput
+                      name="confirmPassword"
+                      type="password"
+                      label="Confirm Password"
+                      fullWidth
+                      value={inputs.confirmPassword}
+                      onChange={changeHandler}
+                      error={errors.confirmPasswordError}
+                    />
                   </MKBox>
                   <MKBox mt={4} mb={1}>
-                    <MKButton variant="gradient" color="info" fullWidth>
-                      sign up
+                    <MKButton type="submit" variant="gradient" color="info" fullWidth>
+                      Sign up
                     </MKButton>
                   </MKBox>
                   <MKBox mt={3} mb={1} textAlign="center">
@@ -109,13 +181,24 @@ function SignUpBasic() {
                       Already have an account?{" "}
                       <MKTypography
                         component={Link}
-                        to="/pages/authentification/sign-in"
+                        to="/authentication/sign-in"
                         variant="button"
                         color="info"
                         fontWeight="medium"
                         textGradient
                       >
                         Sign in
+                      </MKTypography>{" "}
+                      |{" "}
+                      <MKTypography
+                        onClick={retour}
+                        variant="button"
+                        color="info"
+                        fontWeight="medium"
+                        textGradient
+                        sx={{ cursor: "pointer" }}
+                      >
+                        Retour
                       </MKTypography>
                     </MKTypography>
                   </MKBox>

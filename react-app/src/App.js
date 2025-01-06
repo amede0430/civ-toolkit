@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -7,6 +7,10 @@ import themeRTL from "assets/theme/theme-rtl";
 import Presentation from "layouts/pages/presentation";
 import routes from "routes";
 import Icon from "@mui/material/Icon";
+import History from "pages/LandingPages/history";
+import AboutUs from "pages/LandingPages/AboutUs";
+import SignIn from "pages/LandingPages/SignIn";
+import SignUp from "pages/LandingPages/SignUp";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -28,8 +32,14 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
+import ProtectedRoute from "examples/protected_routes";
+import { AuthContext } from "context";
+import Catalogue from "pages/LandingPages/Catalogue";
+
+
 
 export default function App() {
+  const authContext = useContext(AuthContext);
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -91,36 +101,45 @@ export default function App() {
         return getRoutes(route.collapse);
       }
 
-      if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+      if (route.route && route.type !== "public") {
+        return <Route
+          exact
+          path={route.route}
+          element={
+            <ProtectedRoute isAuthenticated={authContext.isAuthenticated}>
+              {route.component}
+            </ProtectedRoute>
+          }
+          key={route.key}
+        />;
       }
 
       return null;
     });
-// Configurator button
-const ConfiguratorButton = () => (
-  <MDBox
-    display="flex"
-    justifyContent="center"
-    alignItems="center"
-    width="3.25rem"
-    height="3.25rem"
-    bgColor="white"
-    shadow="sm"
-    borderRadius="50%"
-    position="fixed"
-    right="2rem"
-    bottom="2rem"
-    zIndex={99}
-    color="dark"
-    sx={{ cursor: "pointer" }}
-    onClick={handleConfiguratorOpen}
-  >
-    <Icon fontSize="small" color="inherit">
-      settings
-    </Icon>
-  </MDBox>
-);
+  // Configurator button
+  const ConfiguratorButton = () => (
+    <MDBox
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      width="3.25rem"
+      height="3.25rem"
+      bgColor="white"
+      shadow="sm"
+      borderRadius="50%"
+      position="fixed"
+      right="2rem"
+      bottom="2rem"
+      zIndex={99}
+      color="dark"
+      sx={{ cursor: "pointer" }}
+      onClick={handleConfiguratorOpen}
+    >
+      <Icon fontSize="small" color="inherit">
+        settings
+      </Icon>
+    </MDBox>
+  );
   // Define ThemeProvider dynamically
   const CurrentThemeProvider = direction === "rtl" ? (
     <CacheProvider value={rtlCache}>
@@ -164,15 +183,36 @@ const ConfiguratorButton = () => (
           <ConfiguratorButton />
         </>
       )}
+       {layout === "Presentation" && (
+        <>
+          {/* <Sidenav
+            color={sidenavColor}
+            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+            brandName="Material Dashboard 2"
+            routes={routes}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          />
+          <Configurator />
+          <ConfiguratorButton /> */}
+        </>
+      )}
       {layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
         <Route path="/presentation" element={<Presentation />} />
+        <Route path="/catalog" element={<Catalogue/>} />
+        <Route path="/history" element={<History/>} />
+        <Route path="/about-us" element={<AboutUs/>} />
+        <Route path="/authentication/sign-in" element={<SignIn/>} />
+        <Route path="/authentication/sign-up" element={<SignUp/>} />
         <Route path="*" element={<Navigate to="/presentation" />} />
-        
+
       </Routes>
     </ThemeProvider>
   );
-
+  
   return CurrentThemeProvider;
 }
+
+

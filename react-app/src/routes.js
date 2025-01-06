@@ -68,6 +68,7 @@ const routes = [
   },
   {
     name: "Catalogue",
+    type:"public",
     icon: <Icon>folder</Icon>,
     route: "/catalog",
     component: <Catalogue />,
@@ -75,6 +76,7 @@ const routes = [
   },
   {
     name: "Historique",
+    type:"public",
     icon: <Icon>view_list</Icon>,
     route: "/history",
     component: <History />,
@@ -82,6 +84,7 @@ const routes = [
   },
   {
     name: "Qui sommes-nous ?",
+    type:"public",
     icon: <Icon>group</Icon>,
     route: "/about-us",
     component: <AboutUs />,
@@ -128,15 +131,15 @@ const routes = [
     showInNavbar: false,
   },
   {
-    type: "collapse",
+    type:"public",
     name: "Sign In",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,
-    showInNavbar: false,
+    showInNavbar: true,
   },
   {
-    type: "collapse",
+    type: "public",
     name: "Sign Up",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",

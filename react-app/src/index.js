@@ -17,6 +17,7 @@ import React from "react";
 import * as ReactDOMClient from "react-dom/client"; // Maintenir votre méthode existante
 import { BrowserRouter } from "react-router-dom";
 import App from "App";
+import { AuthContextProvider } from "context";
 
 // Importation du contexte Material Dashboard
 import { MaterialUIControllerProvider } from "context";
@@ -25,9 +26,11 @@ const container = document.getElementById("root"); // Garder "root" pour corresp
 const root = ReactDOMClient.createRoot(container);
 
 root.render(
-  <BrowserRouter>
-    <MaterialUIControllerProvider>
-      <App />
-    </MaterialUIControllerProvider>
+<BrowserRouter>
+    <AuthContextProvider>
+      <MaterialUIControllerProvider>
+        <App />
+      </MaterialUIControllerProvider>
+    </AuthContextProvider>
   </BrowserRouter>
 );

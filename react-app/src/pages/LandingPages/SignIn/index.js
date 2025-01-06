@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Pour redirection
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
@@ -18,32 +18,100 @@ import routes from "routes";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import authService from "services/auth-service";
+import { AuthContext } from "context";
 
 function SignInBasic() {
-  const [rememberMe, setRememberMe] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false); // Nouvelle option pour admin
   const navigate = useNavigate(); // Hook pour la navigation
+
+  const retour = () => {
+    navigate(-1); // Navigue à la page précédente
+  };
+  const authContext = useContext(AuthContext);
+
+  const [user, setUser] = useState({});
+  const [credentialsErros, setCredentialsError] = useState(null);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
+    emailError: false,
+    passwordError: false,
+  });
+
+  const addUserHandler = (newUser) => setUser(newUser);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  // Fonction pour gérer la soumission du formulaire
-  const handleSignIn = (e) => {
-    e.preventDefault();
-    // Exemple de validation simple
-    if (isAdmin && email === "admin@example.com" && password === "admin123") {
-      navigate("/dashboard"); // Redirection vers le tableau de bord admin
-    } else if (!isAdmin && email === "user@example.com" && password === "user123") {
-      navigate("/presentation"); // Redirection vers une page utilisateur
-    } else {
-      alert("Identifiants incorrects !");
-    }
+  const changeHandler = (e) => {
+    setInputs({
+      ...inputs,
+      [e.target.name]: e.target.value,
+    });
   };
+  // Fonction pour gérer la soumission du formulaire
+  const handleSignIn = async (e) => {
+    e.preventDefault();
 
+    const mailFormat = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
+
+    if (inputs.email.trim().length === 0 || !inputs.email.trim().match(mailFormat)) {
+      setErrors({ ...errors, emailError: true });
+      return;
+    }
+
+    if (inputs.password.trim().length < 6) {
+      setErrors({ ...errors, passwordError: true });
+      return;
+    }
+
+    const newUser = { email: inputs.email, password: inputs.password };
+    addUserHandler(newUser);
+
+    const myData = {
+       
+       ...newUser ,
+      
+    };
+
+    try {
+      const response = await authService.login(myData);
+      console.log(response.data);
+      console.log("---------------")
+      authContext.login(response.token, response.data.role, response.refresh_token);
+      console.log("cc1")
+    } catch (res) {
+      if (res.hasOwnProperty("message")) {
+        setCredentialsError(res.message);
+      } else {
+        setCredentialsError(res.errors[0].detail);
+      }
+    }
+
+    return () => {
+      setInputs({
+        email: "",
+        password: "",
+      });
+
+      setErrors({
+        emailError: false,
+        passwordError: false,
+      });
+    };
+  };
+  // function retour() {
+  //   // window.history.back();
+  //   history.go(-1);
+  // }
+  
   return (
     <>
-      <DefaultNavbar
+      {/* <DefaultNavbar
         routes={routes}
         action={{
           type: "internal",
@@ -53,7 +121,7 @@ function SignInBasic() {
         }}
         transparent
         light
-      />
+      /> */}
       <MKBox
         position="absolute"
         top={0}
@@ -95,34 +163,25 @@ function SignInBasic() {
                 <MKBox component="form" role="form" onSubmit={handleSignIn}>
                   <MKBox mb={2}>
                     <MKInput
+                    name='email'
                       type="email"
                       label="Email"
                       fullWidth
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={inputs.email}
+                      onChange={changeHandler}
                     />
                   </MKBox>
                   <MKBox mb={2}>
-                    <MKInput
+                    <MKInput    
+                    name='password'
                       type="password"
                       label="Password"
                       fullWidth
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={inputs.password}
+                      onChange={changeHandler}
                     />
                   </MKBox>
-                  <MKBox display="flex" alignItems="center" ml={-1} mb={2}>
-                    <Switch checked={isAdmin} onChange={() => setIsAdmin(!isAdmin)} />
-                    <MKTypography
-                      variant="button"
-                      fontWeight="regular"
-                      color="text"
-                      onClick={() => setIsAdmin(!isAdmin)}
-                      sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-                    >
-                      &nbsp;&nbsp;Se connecter en tant qu'admin
-                    </MKTypography>
-                  </MKBox>
+                  
                   <MKBox display="flex" alignItems="center" ml={-1}>
                     <Switch checked={rememberMe} onChange={handleSetRememberMe} />
                     <MKTypography
@@ -145,7 +204,7 @@ function SignInBasic() {
                       Don&apos;t have an account?{" "}
                       <MKTypography
                         component={Link}
-                        to="/authentification/sign-up/cover"
+                        to="/authentication/sign-up"
                         variant="button"
                         color="info"
                         fontWeight="medium"
@@ -153,7 +212,17 @@ function SignInBasic() {
                       >
                         Sign up
                       </MKTypography>
-                    </MKTypography>
+                    </MKTypography>||
+                    <MKTypography
+                        onClick = {retour}
+                        variant="button"
+                        color="info"
+                        fontWeight="medium"
+                        textGradient
+                        sx={{ cursor: "pointer" }}
+                      >
+                       Retour
+                      </MKTypography>
                   </MKBox>
                 </MKBox>
               </MKBox>
