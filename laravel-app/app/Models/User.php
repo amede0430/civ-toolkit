@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Payment::class);
     }
+
+    public function commands()
+    {
+        return $this->hasMany(Command::class);
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\RatingController;
+use App\Http\Controllers\API\CommandController;
 //use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Groupe pour les clients (custumer)
     Route::prefix('custumer')->middleware('custumer')->group(function () {
-
+        Route::apiResource('commands', CommandController::class);
     });
 
     // Groupe pour les ingénieurs (engineer)
