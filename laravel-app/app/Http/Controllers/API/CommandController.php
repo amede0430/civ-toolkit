@@ -5,9 +5,14 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Command;
+use App\Models\CommandProcessToken;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CommandProcessMailable;
 
 class CommandController extends Controller
 {
@@ -28,6 +33,7 @@ class CommandController extends Controller
     {
         // Validation des données
         $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
             'area' => 'required|numeric',
             'levels_number' => 'required|integer|min:1',
             'materials' => 'required|string',
@@ -53,6 +59,7 @@ class CommandController extends Controller
 
         $command = Command::create([
             'user_id' => Auth::id(),
+            'name' => $request->name,
             'area' => $request->area,
             'levels_number' => $request->levels_number,
             'materials' => $request->materials,
@@ -109,6 +116,7 @@ class CommandController extends Controller
 
         // Validation des données
         $validator = Validator::make($request->all(), [
+            'name' => 'required|string:max:255',
             'area' => 'required|numeric',
             'levels_number' => 'required|integer|min:1',
             'materials' => 'required|string',
@@ -164,6 +172,114 @@ class CommandController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Commande supprimée avec succès.'
+        ]);
+    }
+
+    public function processCommand(Request $request, string $command_id) {
+        $command = Command::find($command_id);
+
+        if (!$command) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Commande non trouvée'
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'engineer_id' => 'required|exists:users,id',
+            'price' => 'required|numeric|min:0',
+            'comment' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
+
+        $command->engineer_id = $request->engineer_id;
+        $command->price = $request->price;
+        $command->status = 'treated';
+        
+        do {
+            $token = Str::random(60);
+            $tokenExist = CommandProcessToken::whereNotNull('token')->first(
+                function ($cmd) use ($token) {
+                    return Hash::check($token, $cmd->token);
+                }
+            )->exists();
+        } while ($tokenExist);
+        
+        $commandProcessTokenData = [
+            'command_id' => $command->id,
+            'token' => $token,
+            'comment' => $request->comment,
+            'created_at' => now(),
+        ];
+
+        Mail::to($command->user()->email)->send(new CommandProcessMailable($commandProcessTokenData));
+
+        $commandProcessTokenData['token'] = Hash::make($commandProcessTokenData['token']);
+        CommandProcessToken::create($commandProcessTokenData);
+        $command->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Commande traitée avec succès. Un email a été envoyé à l'utilisateur pour validation.",
+            'data' => $command,
+        ]);
+
+    }
+
+    public function validateCommand($token, $answer) {
+        $commandProcess = CommandProcessToken::whereNotNull('token')->first(
+                            function ($cmd) use ($token) {
+                                return Hash::check($token, $cmd->token);
+                            }
+                        );
+
+        if (!$commandProcess->exists()) {
+            return response()->json([
+                // 'success' => false,
+                'message' => 'Aucune commande en attente de traitement avec ce token.'
+            ], 404);
+        }
+
+        $command = Command::find($commandProcess->command_id);
+
+        if ($command->status != 'treated') {
+            if ($command->status == 'pending') {
+                $message = "Cette commande n'a pas encore été traitée par l'admin.";
+            } else {
+                $message = "Cette commande a déjà été " . $command->status == 'accepted' ? 'acceptée' : 'rejetée' . ".";
+            }
+            return response()->json([
+                // 'success' => false,
+                'message' => $message,
+            ], 400);
+        }
+
+        if ($answer == 'accept') {
+            $command->status = 'accepted';
+        }
+        else if ($answer == 'reject') {
+            $command->status = 'rejected';
+        }
+        else {
+            return response()->json([
+                // 'success' => false,
+                'message' => "Veuillez fournir une réponse valide (accept ou reject).",
+            ], 400);
+        }
+
+        $command->save();
+        $commandProcess->delete();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Commande '. $command->status == 'accepted' ? 'acceptée' : 'rejetée' .' avec succès.',
+            'data' => $command,
         ]);
     }
 

@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Command extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'engineer_id',
+        'name',
         'area',
         'levels_number',
         'materials',
@@ -28,5 +31,8 @@ class Command extends Model
         return $this->belongsTo(User::class);
     }
 
-    use HasFactory;
+    public function commandProcessToken()
+    {
+        return $this->belongsTo(CommandProcessToken::class);
+    }
 }

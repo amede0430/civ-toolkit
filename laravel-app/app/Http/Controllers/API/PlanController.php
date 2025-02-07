@@ -273,7 +273,6 @@ class PlanController extends Controller
         ], 200);
     }
 
-
     /**
      * @OA\Delete(
      *     path="/api/engineer/plans/{plan_id}",

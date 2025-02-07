@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('engineer_id')->nullable();
 
+            $table->string('name');  // Superficie
             $table->float('area');  // Superficie
             $table->tinyInteger('levels_number');  // Nombre de niveaux
             $table->text('materials');  // A voir
@@ -26,7 +27,7 @@ return new class extends Migration
             $table->timestamp('deadline');  // Dernier delai
             $table->text('comment')->nullable();  // Description et commentaire
 
-            $table->enum('status', ['pending', 'accepted', 'rejected']);
+            $table->enum('status', ['pending', 'treated', 'accepted', 'rejected']);
             $table->unsignedDecimal('price')->nullable();
 
             $table->timestamps();
