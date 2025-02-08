@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Groupe pour les clients (customer)
     Route::prefix('customer')->middleware('customer')->group(function () {
         Route::apiResource('commands', CommandController::class);
-        Route::get('commands/{token}/validate/{answer}', [CommandController::class, 'validateCommand']); // Valider une commande (O/N)
+        Route::get('commands/{token}/validate/{answer}', [CommandController::class, 'validateCommand']);
     });
 
     // Groupe pour les ingénieurs (engineer)
@@ -52,6 +52,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('categories', CategorieController::class);
         Route::apiResource('engineers', UserController::class);
         Route::post('accept/plan/{plan_id}', [UserController::class, 'accept_plan' ]);
-        Route::post('commands/{command_id}/process', [CommandController::class, 'processCommand' ]); // Traiter une commande
+        Route::post('commands/{command_id}/process', [CommandController::class, 'processCommand' ]);
     });
 });

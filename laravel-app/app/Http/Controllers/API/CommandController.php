@@ -177,6 +177,7 @@ class CommandController extends Controller
         ]);
     }
 
+    // Traiter une commande
     public function processCommand(Request $request, string $command_id) {
         $command = Command::find($command_id);
 
@@ -247,6 +248,7 @@ class CommandController extends Controller
 
     }
 
+    // Valider une commande (O/N)
     public function validateCommand($token, $answer) {
         $commandProcess = CommandProcessToken::whereNotNull('token')->get()->first(
                             function ($cmd) use ($token) {
