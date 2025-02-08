@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réponse à votre demande de plan</title>
+    <title>Commande Assignée</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,23 +67,18 @@
 </head>
 <body>
     <div class="container">
-        <h1>Réponse à votre demande de plan</h1>
-        <p>Bonjour M./Mme <span class="highlight">{{ $mailData['command']->user->name }}</span>,</p>
-        <p>Une réponse a été apportée à votre demande de plan. Voici les détails :</p>
+        <h1>Assignation à une nouvelle commande</h1>
+        <p>Bonjour <span class="highlight">{{ $mailData->engineer->name }}</span>,</p>
+        <p>Une nouvelle commande vous a été assignée. En voici quelques détails :</p>
 
         <div class="resource-info">
-            <p><strong>Plan demandé : </strong> <span class="highlight">{{ $mailData['command']->name }}</span></p>
-            <p><strong>Proposition de prix : </strong> <span class="highlight">{{ number_format($mailData['command']->price, 0, ",", " " ) }} FCFA</span></p>
-            <p><strong>Message de l'administrateur : </strong> {{ $mailData['comment'] }}</p>
+            <p><strong>Client : </strong> <span class="highlight">{{ $mailData->user->name }}</span></p>
+            <p><strong>Plan demandé : </strong> <span class="highlight">{{ $mailData->name }}</span></p>
+            <p><strong>Prix accepté : </strong> <span class="highlight">{{ $mailData->price }} FCFA</span></p>
         </div>
 
-        <p>Veuillez choisir une option :</p>
-        <p style="text-align: center;">
-            <span>
-                <a href="{{ url('/api/customer/commands/'. $mailData['token'] .'/validate/accept') }}" class="button">Accepter</a>
-                <a href="{{ url('/api/customer/commands/'. $mailData['token'] .'/validate/reject') }}" class="button" style="background-color: #dc3545;">Rejeter</a>
-            </span>
-        </p>
+        <p>Merci de traiter cette commande dans les meilleurs délais.</p>
+        {{-- <a href="{{ url('/engineer/command/' . $mailData['command']->id) }}" class="button">Voir la commande</a> --}}
 
         <footer>
             <p>L'équipe de gestion de CIV-TOOLKIT.</p>

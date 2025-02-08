@@ -26,13 +26,15 @@ class Command extends Model
         'price',
     ];
 
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
-    public function commandProcessToken()
-    {
+    public function engineer() {
+        return $this->belongsTo(User::class, 'engineer_id');
+    }
+
+    public function commandProcessToken() {
         return $this->belongsTo(CommandProcessToken::class);
     }
 }

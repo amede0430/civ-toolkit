@@ -9,10 +9,9 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
-use App\Models\Command;
 use Illuminate\Mail\Mailables\Address;
 
-class CommandProcessMailable extends Mailable
+class CommandAssignationMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -21,12 +20,10 @@ class CommandProcessMailable extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($processCommand, $command)
+    public function __construct($command)
     {
         $this->sender = User::where('role', 'admin')->first();
-        $this->mailData = $processCommand;
-        $this->mailData['command'] = $command;
-    }
+        $this->mailData = $command;    }
 
     /**
      * Get the message envelope.
@@ -35,7 +32,7 @@ class CommandProcessMailable extends Mailable
     {
         return new Envelope(
             from: new Address($this->sender->email, $this->sender->name),
-            subject: 'Reponse à votre demande de plan',
+            subject: 'Assignation à une nouvelle commande',
         );
     }
 
@@ -45,7 +42,7 @@ class CommandProcessMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.command-process',
+            view: 'mail.command-assignation',
             with: ['mailData' => $this->mailData],
         );
     }

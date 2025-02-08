@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CommandProcessMailable;
+use App\Mail\CommandAssignationMailable;
+use App\Models\User;
 
 class CommandController extends Controller
 {
@@ -94,7 +96,7 @@ class CommandController extends Controller
         }
 
         // Ajouter les URLs des fichiers à la réponse
-        $command->file_path = asset('storage/' . $command->cover_path);
+        $command->file_path = asset('storage/' . $command->file_path);
         return response()->json([
             'success' => true,
             'message' => 'Commande récupérée avec succès',
@@ -194,7 +196,18 @@ class CommandController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 // 'success' => false,
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+            ], 422);
+        }
+
+        if (User::find($request->engineer_id)->role != 'engineer') {
+            return response()->json([
+                // 'success' => false,
+                'message' => [
+                    'engineer_id' => [
+                        "L'ingénieur spécifié n'existe pas"
+                    ],
+                ],
             ], 422);
         }
 
@@ -204,11 +217,11 @@ class CommandController extends Controller
         
         do {
             $token = Str::random(60);
-            $tokenExist = CommandProcessToken::whereNotNull('token')->first(
+            $tokenExist = CommandProcessToken::whereNotNull("token")->get()->first(
                 function ($cmd) use ($token) {
                     return Hash::check($token, $cmd->token);
                 }
-            )->exists();
+            );
         } while ($tokenExist);
         
         $commandProcessTokenData = [
@@ -218,7 +231,9 @@ class CommandController extends Controller
             'created_at' => now(),
         ];
 
-        Mail::to($command->user()->email)->send(new CommandProcessMailable($commandProcessTokenData));
+        // dd($command->user->email);
+
+        Mail::to($command->user->email)->send(new CommandProcessMailable($commandProcessTokenData, $command));
 
         $commandProcessTokenData['token'] = Hash::make($commandProcessTokenData['token']);
         CommandProcessToken::create($commandProcessTokenData);
@@ -233,19 +248,24 @@ class CommandController extends Controller
     }
 
     public function validateCommand($token, $answer) {
-        $commandProcess = CommandProcessToken::whereNotNull('token')->first(
+        $commandProcess = CommandProcessToken::whereNotNull('token')->get()->first(
                             function ($cmd) use ($token) {
                                 return Hash::check($token, $cmd->token);
                             }
                         );
+        // dd(Hash::check('V3se0ZPWagihvozhFApr30pNg6ACYV4OfqI1E3uNPI1kBojvX59aADQUVKFt','$2y$12$OhnEwiYNO2/WNrkV5ADzZ.UHkHaLdZPUaTr4rWdUNuW859rOziVDa'));
 
-        if (!$commandProcess->exists()) {
+        if (!$commandProcess) {
             return response()->json([
                 // 'success' => false,
-                'message' => 'Aucune commande en attente de traitement avec ce token.'
+                'message' => [
+                    'token' => [
+                        'Aucune commande en attente de traitement avec ce token.'
+                        ]
+                    ],
             ], 404);
         }
-
+            
         $command = Command::find($commandProcess->command_id);
 
         if ($command->status != 'treated') {
@@ -262,6 +282,8 @@ class CommandController extends Controller
 
         if ($answer == 'accept') {
             $command->status = 'accepted';
+            Mail::to($command->engineer->email)->send(new CommandAssignationMailable($command));
+
         }
         else if ($answer == 'reject') {
             $command->status = 'rejected';
@@ -269,16 +291,21 @@ class CommandController extends Controller
         else {
             return response()->json([
                 // 'success' => false,
-                'message' => "Veuillez fournir une réponse valide (accept ou reject).",
+                'message' => [
+                    'answer' => [
+                        'Veuillez fournir une réponse valide (accept ou reject).'
+                        ]
+                    ],
             ], 400);
         }
+
 
         $command->save();
         $commandProcess->delete();
         
         return response()->json([
             'success' => true,
-            'message' => 'Commande '. $command->status == 'accepted' ? 'acceptée' : 'rejetée' .' avec succès.',
+            'message' => 'Commande '. ($command->status == 'accepted' ? 'acceptée' : 'rejetée') .' avec succès.',
             'data' => $command,
         ]);
     }

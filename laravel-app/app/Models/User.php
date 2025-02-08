@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Command::class);
     }
+
+    public function assignations()
+    {
+        return $this->hasMany(Command::class, 'engineer_id');
+    }
 }
