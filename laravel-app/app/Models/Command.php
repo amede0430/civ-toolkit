@@ -35,6 +35,6 @@ class Command extends Model
     }
 
     public function commandProcessToken() {
-        return $this->belongsTo(CommandProcessToken::class);
+        return $this->hasOne(CommandProcessToken::class);
     }
 }

@@ -260,7 +260,7 @@ class CommandController extends Controller
     // Valider une commande (O/N)
     public function validateCommand($token, $answer) {
         $commandProcess = CommandProcessToken::whereNotNull('token')
-                            ->select('id', 'token')
+                            ->select('command_id', 'token')
                             ->get()
                             ->first(fn($cmd) => Hash::check($token, $cmd->token));
 
@@ -276,12 +276,24 @@ class CommandController extends Controller
         }
             
         $command = Command::find($commandProcess->command_id);
+        if (!$command) {
+            return response()->json([
+                // 'success' => false,
+                'message' => [
+                    'command' => [
+                        'Aucune commande correspondante.'
+                        ]
+                    ],
+            ], 404);
+        }
+        
+        $commandProcess = $command->commandProcessToken;
 
         if ($command->status != 'treated') {
             if ($command->status == 'pending') {
                 $message = "Cette commande n'a pas encore été traitée par l'admin.";
             } else {
-                $message = "Cette commande a déjà été " . $command->status == 'accepted' ? 'acceptée' : 'rejetée' . ".";
+                $message = "Cette commande a déjà été " .($command->status == 'accepted' ? 'acceptée' : 'rejetée'). ".";
             }
             return response()->json([
                 // 'success' => false,

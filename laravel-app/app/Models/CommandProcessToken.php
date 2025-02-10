@@ -20,6 +20,6 @@ class CommandProcessToken extends Model
 
     public function command()
     {
-        return $this->hasOne(Command::class);
+        return $this->belongsTo(Command::class);
     }
 }

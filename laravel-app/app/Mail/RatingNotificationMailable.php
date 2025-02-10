@@ -17,6 +17,9 @@ class RatingNotificationMailable extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $data, $sender;
+    public $tries = 5;
+    public $maxExceptions = 3;
+    public $timeout = 30;
 
     /**
      * Create a new message instance.

@@ -17,6 +17,10 @@ class ValidationRegisterMailable extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $userData, $sender;
+    public $tries = 5;
+    public $maxExceptions = 3;
+    public $timeout = 30;
+
     /**
      * Create a new message instance.
      */

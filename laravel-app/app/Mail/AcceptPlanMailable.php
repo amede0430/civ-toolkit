@@ -16,6 +16,9 @@ class AcceptPlanMailable extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $mailData, $sender;
+    public $tries = 5;
+    public $maxExceptions = 3;
+    public $timeout = 30;
 
     /**
      * Crée une nouvelle instance de message.
