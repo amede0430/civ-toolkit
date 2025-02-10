@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\CommandProcessMailable;
 use App\Mail\CommandAssignationMailable;
 use App\Models\User;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 class CommandController extends Controller
 {
@@ -79,7 +80,7 @@ class CommandController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Commande enregistrée avec succès',
-            'command' => $command
+            'data' => $command
         ], 201);
     }
 
@@ -201,6 +202,17 @@ class CommandController extends Controller
             ], 422);
         }
 
+        if ($command->status != 'pending') {
+            return response()->json([
+                // 'success' => false,
+                'message' => [
+                    'status' => [
+                        'Commande déjà traitée ('. $command->status .').',
+                    ],
+                    ],
+            ], 400);
+        }
+
         if (User::find($request->engineer_id)->role != 'engineer') {
             return response()->json([
                 // 'success' => false,
@@ -218,11 +230,10 @@ class CommandController extends Controller
         
         do {
             $token = Str::random(60);
-            $tokenExist = CommandProcessToken::whereNotNull("token")->get()->first(
-                function ($cmd) use ($token) {
-                    return Hash::check($token, $cmd->token);
-                }
-            );
+            $tokenExist = CommandProcessToken::whereNotNull('token')
+                            ->select('id', 'token')
+                            ->get()
+                            ->first(fn($cmd) => Hash::check($token, $cmd->token));
         } while ($tokenExist);
         
         $commandProcessTokenData = [
@@ -231,8 +242,6 @@ class CommandController extends Controller
             'comment' => $request->comment,
             'created_at' => now(),
         ];
-
-        // dd($command->user->email);
 
         Mail::to($command->user->email)->send(new CommandProcessMailable($commandProcessTokenData, $command));
 
@@ -250,12 +259,10 @@ class CommandController extends Controller
 
     // Valider une commande (O/N)
     public function validateCommand($token, $answer) {
-        $commandProcess = CommandProcessToken::whereNotNull('token')->get()->first(
-                            function ($cmd) use ($token) {
-                                return Hash::check($token, $cmd->token);
-                            }
-                        );
-        // dd(Hash::check('V3se0ZPWagihvozhFApr30pNg6ACYV4OfqI1E3uNPI1kBojvX59aADQUVKFt','$2y$12$OhnEwiYNO2/WNrkV5ADzZ.UHkHaLdZPUaTr4rWdUNuW859rOziVDa'));
+        $commandProcess = CommandProcessToken::whereNotNull('token')
+                            ->select('id', 'token')
+                            ->get()
+                            ->first(fn($cmd) => Hash::check($token, $cmd->token));
 
         if (!$commandProcess) {
             return response()->json([

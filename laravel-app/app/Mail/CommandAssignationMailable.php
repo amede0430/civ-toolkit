@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use Illuminate\Mail\Mailables\Address;
 
-class CommandAssignationMailable extends Mailable
+class CommandAssignationMailable extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -23,7 +23,8 @@ class CommandAssignationMailable extends Mailable
     public function __construct($command)
     {
         $this->sender = User::where('role', 'admin')->first();
-        $this->mailData = $command;    }
+        $this->mailData = $command;
+    }
 
     /**
      * Get the message envelope.

@@ -1,9 +1,16 @@
 services:
-  smtp4dev:
-    image: rnwood/smtp4dev:v3
+  # smtp4dev:
+  #   image: rnwood/smtp4dev:v3
+  #   restart: always
+  #   ports:
+  #     # Change the number before : to the port the web interface should be accessible on
+  #     - '9080:80'
+  #     # Change the number before : to the port the SMTP server should be accessible on
+  #     - '9025:25'
+
+  redis-stack:
+    image: redis/redis-stack:latest
     restart: always
     ports:
-      # Change the number before : to the port the web interface should be accessible on
-      - '9080:80'
-      # Change the number before : to the port the SMTP server should be accessible on
-      - '9025:25'
+      - '6379:6379'
+      - '8001:8001'

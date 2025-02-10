@@ -9,10 +9,9 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
-use App\Models\Command;
 use Illuminate\Mail\Mailables\Address;
 
-class CommandProcessMailable extends Mailable
+class CommandProcessMailable extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

@@ -12,7 +12,7 @@ use App\Models\Plan;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RatingNotificationMailable extends Mailable
+class RatingNotificationMailable extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

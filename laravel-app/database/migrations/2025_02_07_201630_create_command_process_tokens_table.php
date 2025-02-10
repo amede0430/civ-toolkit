@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->timestamp('created_at');
             
+            $table->index('token');
             $table->foreign('command_id')->references('id')->on('commands')->cascadeOnDelete();
         });
     }
