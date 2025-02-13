@@ -74,7 +74,7 @@
         <div class="resource-info">
             <p><strong>Client : </strong> <span class="highlight">{{ $mailData->user->name }}</span></p>
             <p><strong>Plan demandé : </strong> <span class="highlight">{{ $mailData->name }}</span></p>
-            <p><strong>Prix accepté : </strong> <span class="highlight">{{ $mailData->price }} FCFA</span></p>
+            <p><strong>Prix accepté : </strong> <span class="highlight">{{ number_format($mailData->price, 0, ",", " ") }} FCFA</span></p>
         </div>
 
         <p>Merci de traiter cette commande dans les meilleurs délais.</p>

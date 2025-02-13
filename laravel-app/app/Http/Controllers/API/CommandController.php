@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Command;
 use App\Models\CommandProcessToken;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -15,10 +15,20 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\CommandProcessMailable;
 use App\Mail\CommandAssignationMailable;
 use App\Models\User;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 class CommandController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/customer/commands",
+     *     operationId="getCommands",
+     *     tags={"Commandes"},
+     *     summary="Récupérer la liste des commandes",
+     *     @OA\Response(response=200, description="Liste des commandes récupérée avec succès"),
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function index()
     {
         $commands = Command::with(['user'])
@@ -31,13 +41,43 @@ class CommandController extends Controller
         ], 200);
     }
 
-    
+     /**
+     * @OA\Post(
+     *     path="/api/customer/commands",
+     *     operationId="createCommand",
+     *     tags={"Commandes"},
+     *     summary="Créer une nouvelle commande",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"name", "area", "levels_number", "materials", "zone", "construction_type", "command_type", "deadline"},
+     *                 @OA\Property(property="name", type="string", description="Nom de la commande"),
+     *                 @OA\Property(property="area", type="number", format="float", description="Superficie de l'oeuvre (m²)"),
+     *                 @OA\Property(property="levels_number", type="integer", description="Nombre de niveaux (rez de chaussée + étages)"),
+     *                 @OA\Property(property="materials", type="string", description="Liste des materiaux de construction"),
+     *                 @OA\Property(property="zone", type="string", description="Zone de la construction", enum={"agglomeration", "village"}),
+     *                 @OA\Property(property="construction_type", type="string", description="Type de construction", enum={"individual", "public"}),
+     *                 @OA\Property(property="command_type", type="string", description="Type de commande", enum={"entire", "element"}),
+     *                 @OA\Property(property="file", type="string", format="binary", description="Piece jointe pour appuyer la commande"),
+     *                 @OA\Property(property="deadline", type="string", format="date", description="Date limite de traitement de la commande"),
+     *                @OA\Property(property="comment", type="string", description="Commentaire et info supplémentaire"),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Commande créée avec succès"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function store(Request $request)
     {
         // Validation des données
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'area' => 'required|numeric',
+            'area' => 'required|numeric||min:0',
             'levels_number' => 'required|integer|min:1',
             'materials' => 'required|string',
             'zone' => 'required|in:agglomeration,village',
@@ -84,7 +124,25 @@ class CommandController extends Controller
         ], 201);
     }
 
-   
+    /**
+     * @OA\Get(
+     *     path="/api/customer/commands/{id}",
+     *     operationId="getCommand",
+     *     tags={"Commandes"},
+     *     summary="Récupérer une commande spécifique",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la commande",
+     *         @OA\Schema(type="string", example="1")
+     *     ),
+     *     @OA\Response(response=200, description="Commande récupérée avec succès"),
+     *     @OA\Response(response=404, description="Commande non trouvée"),
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function show(string $id)
     {
         $command = Command::find($id);
@@ -105,7 +163,45 @@ class CommandController extends Controller
         ], 200);
     }
 
-    
+     /**
+     * @OA\Put(
+     *     path="/api/customer/commands/{id}",
+     *     operationId="updateCommand",
+     *     tags={"Commandes"},
+     *     summary="Mettre à jour une commande",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la commande",
+     *         @OA\Schema(type="string", example="1")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"name", "area", "levels_number", "materials", "zone", "construction_type", "command_type", "deadline"},
+     *                 @OA\Property(property="name", type="string", description="Nom de la commande"),
+     *                 @OA\Property(property="area", type="number", format="float", description="Superficie de l'oeuvre (m²)"),
+     *                 @OA\Property(property="levels_number", type="integer", description="Nombre de niveaux (rez de chaussée + étages)"),
+     *                 @OA\Property(property="materials", type="string", description="Liste des materiaux de construction"),
+     *                 @OA\Property(property="zone", type="string", description="Zone de la construction", enum={"agglomeration", "village"}),
+     *                 @OA\Property(property="construction_type", type="string", description="Type de construction", enum={"individual", "public"}),
+     *                 @OA\Property(property="command_type", type="string", description="Type de commande", enum={"entire", "element"}),
+     *                 @OA\Property(property="file", type="string", format="binary", description="Piece jointe pour appuyer la commande"),
+     *                 @OA\Property(property="deadline", type="string", format="date", description="Date limite de traitement de la commande"),
+     *                @OA\Property(property="comment", type="string", description="Commentaire et info supplémentaire"),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Commande mise à jour avec succès"),
+     *     @OA\Response(response=404, description="Commande non trouvée"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function update(Request $request, string $id)
     {
         $command = Command::find($id);
@@ -120,7 +216,7 @@ class CommandController extends Controller
         // Validation des données
         $validator = Validator::make($request->all(), [
             'name' => 'required|string:max:255',
-            'area' => 'required|numeric',
+            'area' => 'required|numeric||min:0',
             'levels_number' => 'required|integer|min:1',
             'materials' => 'required|string',
             'zone' => 'required|in:agglomeration,village',
@@ -154,7 +250,25 @@ class CommandController extends Controller
         ]);
     }
 
-    
+    /**
+     * @OA\Delete(
+     *     path="/api/customer/commands/{id}",
+     *     operationId="deleteCommand",
+     *     tags={"Commandes"},
+     *     summary="Supprimer une commande",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la commande",
+     *         @OA\Schema(type="string", example="1")
+     *     ),
+     *     @OA\Response(response=200, description="Commande supprimée avec succès"),
+     *     @OA\Response(response=404, description="Commande non trouvée"),
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function destroy($id)
     {
         $command = Command::find($id);
@@ -178,7 +292,38 @@ class CommandController extends Controller
         ]);
     }
 
-    // Traiter une commande
+    /**
+     * @OA\Post(
+     *     path="/api/admin/commands/{command_id}/process",
+     *     operationId="processCommand",
+     *     tags={"Commandes"},
+     *     summary="Traiter une commande",
+     *     @OA\Parameter(
+     *         name="command_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la commande",
+     *         @OA\Schema(type="string", example="1")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"engineer_id", "price", "comment"},
+     *                 @OA\Property(property="engineer_id", type="integer", description="ID de la commande a traiter"),
+     *                 @OA\Property(property="price", type="number", format="float", description="Prix fixé a la commande"),
+     *                 @OA\Property(property="comment", type="string", description="Commentaire de l'admin"),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Commande traitée avec succès"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=400, description="Commande déjà traitée"),
+     *     @OA\Response(response=404, description="Commande non trouvée"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function processCommand(Request $request, string $command_id) {
         $command = Command::find($command_id);
 
@@ -229,23 +374,21 @@ class CommandController extends Controller
         $command->status = 'treated';
         
         do {
-            $token = Str::random(60);
-            $tokenExist = CommandProcessToken::whereNotNull('token')
-                            ->select('id', 'token')
-                            ->get()
-                            ->first(fn($cmd) => Hash::check($token, $cmd->token));
+            $token = Str::random(64);
+            $tokenExist = CommandProcessToken::where('token', $token)->first();
         } while ($tokenExist);
+        $encryptedToken = Crypt::encryptString($token);
         
         $commandProcessTokenData = [
             'command_id' => $command->id,
-            'token' => $token,
+            'token' => $encryptedToken,
             'comment' => $request->comment,
             'created_at' => now(),
         ];
 
         Mail::to($command->user->email)->send(new CommandProcessMailable($commandProcessTokenData, $command));
 
-        $commandProcessTokenData['token'] = Hash::make($commandProcessTokenData['token']);
+        $commandProcessTokenData['token'] = $token;
         CommandProcessToken::create($commandProcessTokenData);
         $command->save();
 
@@ -257,12 +400,48 @@ class CommandController extends Controller
 
     }
 
-    // Valider une commande (O/N)
+    /**
+     * @OA\Get(
+     *     path="/api/customer/commands/{token}/validate/{answer}",
+     *     operationId="validateCommand",
+     *     tags={"Commandes"},
+     *     summary="Valider une commande",
+     *     @OA\Parameter(
+     *         name="token",
+     *         in="path",
+     *         required=true,
+     *         description="Token de validation",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="answer",
+     *         in="path",
+     *         required=true,
+     *         description="Réponse de validation ('accept'/'reject')",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response=200, description="Commande validée ou rejetée avec succès"),
+     *     @OA\Response(response=400, description="Réponse invalide ou commande déjà traitée"),
+     *     @OA\Response(response=404, description="Commande ou token non trouvé"),
+     *     @OA\Response(response=500, description="Erreur interne"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function validateCommand($token, $answer) {
-        $commandProcess = CommandProcessToken::whereNotNull('token')
-                            ->select('command_id', 'token')
-                            ->get()
-                            ->first(fn($cmd) => Hash::check($token, $cmd->token));
+        try {
+            $decryptedToken = Crypt::decryptString($token);
+            $commandProcess = CommandProcessToken::where('token', $decryptedToken)->first();
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                // 'success' => false,
+                'message' => [
+                    'token' => [
+                        'Token invalide.'
+                        ]
+                    ],
+            ], 404);
+        }
 
         if (!$commandProcess) {
             return response()->json([

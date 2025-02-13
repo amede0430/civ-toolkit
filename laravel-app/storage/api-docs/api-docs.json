@@ -309,6 +309,433 @@
                 ]
             }
         },
+        "/api/customer/commands": {
+            "get": {
+                "tags": [
+                    "Commandes"
+                ],
+                "summary": "Récupérer la liste des commandes",
+                "operationId": "getCommands",
+                "responses": {
+                    "200": {
+                        "description": "Liste des commandes récupérée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Commandes"
+                ],
+                "summary": "Créer une nouvelle commande",
+                "operationId": "createCommand",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "area",
+                                    "levels_number",
+                                    "materials",
+                                    "zone",
+                                    "construction_type",
+                                    "command_type",
+                                    "deadline"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nom de la commande",
+                                        "type": "string"
+                                    },
+                                    "area": {
+                                        "description": "Superficie de l'oeuvre (m²)",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "levels_number": {
+                                        "description": "Nombre de niveaux (rez de chaussée + étages)",
+                                        "type": "integer"
+                                    },
+                                    "materials": {
+                                        "description": "Liste des materiaux de construction",
+                                        "type": "string"
+                                    },
+                                    "zone": {
+                                        "description": "Zone de la construction",
+                                        "type": "string",
+                                        "enum": [
+                                            "agglomeration",
+                                            "village"
+                                        ]
+                                    },
+                                    "construction_type": {
+                                        "description": "Type de construction",
+                                        "type": "string",
+                                        "enum": [
+                                            "individual",
+                                            "public"
+                                        ]
+                                    },
+                                    "command_type": {
+                                        "description": "Type de commande",
+                                        "type": "string",
+                                        "enum": [
+                                            "entire",
+                                            "element"
+                                        ]
+                                    },
+                                    "file": {
+                                        "description": "Piece jointe pour appuyer la commande",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "deadline": {
+                                        "description": "Date limite de traitement de la commande",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "comment": {
+                                        "description": "Commentaire et info supplémentaire",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Commande créée avec succès"
+                    },
+                    "422": {
+                        "description": "Données invalides"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/customer/commands/{id}": {
+            "get": {
+                "tags": [
+                    "Commandes"
+                ],
+                "summary": "Récupérer une commande spécifique",
+                "operationId": "getCommand",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la commande",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Commande récupérée avec succès"
+                    },
+                    "404": {
+                        "description": "Commande non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Commandes"
+                ],
+                "summary": "Mettre à jour une commande",
+                "operationId": "updateCommand",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la commande",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "area",
+                                    "levels_number",
+                                    "materials",
+                                    "zone",
+                                    "construction_type",
+                                    "command_type",
+                                    "deadline"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nom de la commande",
+                                        "type": "string"
+                                    },
+                                    "area": {
+                                        "description": "Superficie de l'oeuvre (m²)",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "levels_number": {
+                                        "description": "Nombre de niveaux (rez de chaussée + étages)",
+                                        "type": "integer"
+                                    },
+                                    "materials": {
+                                        "description": "Liste des materiaux de construction",
+                                        "type": "string"
+                                    },
+                                    "zone": {
+                                        "description": "Zone de la construction",
+                                        "type": "string",
+                                        "enum": [
+                                            "agglomeration",
+                                            "village"
+                                        ]
+                                    },
+                                    "construction_type": {
+                                        "description": "Type de construction",
+                                        "type": "string",
+                                        "enum": [
+                                            "individual",
+                                            "public"
+                                        ]
+                                    },
+                                    "command_type": {
+                                        "description": "Type de commande",
+                                        "type": "string",
+                                        "enum": [
+                                            "entire",
+                                            "element"
+                                        ]
+                                    },
+                                    "file": {
+                                        "description": "Piece jointe pour appuyer la commande",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "deadline": {
+                                        "description": "Date limite de traitement de la commande",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "comment": {
+                                        "description": "Commentaire et info supplémentaire",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Commande mise à jour avec succès"
+                    },
+                    "404": {
+                        "description": "Commande non trouvée"
+                    },
+                    "422": {
+                        "description": "Données invalides"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Commandes"
+                ],
+                "summary": "Supprimer une commande",
+                "operationId": "deleteCommand",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la commande",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Commande supprimée avec succès"
+                    },
+                    "404": {
+                        "description": "Commande non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/commands/{command_id}/process": {
+            "post": {
+                "tags": [
+                    "Commandes"
+                ],
+                "summary": "Traiter une commande",
+                "operationId": "processCommand",
+                "parameters": [
+                    {
+                        "name": "command_id",
+                        "in": "path",
+                        "description": "ID de la commande",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "engineer_id",
+                                    "price",
+                                    "comment"
+                                ],
+                                "properties": {
+                                    "engineer_id": {
+                                        "description": "ID de la commande a traiter",
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "description": "Prix fixé a la commande",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "comment": {
+                                        "description": "Commentaire de l'admin",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Commande traitée avec succès"
+                    },
+                    "422": {
+                        "description": "Données invalides"
+                    },
+                    "400": {
+                        "description": "Commande déjà traitée"
+                    },
+                    "404": {
+                        "description": "Commande non trouvée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/customer/commands/{token}/validate/{answer}": {
+            "get": {
+                "tags": [
+                    "Commandes"
+                ],
+                "summary": "Valider une commande",
+                "operationId": "validateCommand",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "Token de validation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "answer",
+                        "in": "path",
+                        "description": "Réponse de validation ('accept'/'reject')",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Commande validée ou rejetée avec succès"
+                    },
+                    "400": {
+                        "description": "Réponse invalide ou commande déjà traitée"
+                    },
+                    "404": {
+                        "description": "Commande ou token non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/comments": {
             "get": {
                 "tags": [
@@ -1222,6 +1649,10 @@
         {
             "name": "Authentification",
             "description": "Authentification"
+        },
+        {
+            "name": "Commandes",
+            "description": "Commandes"
         },
         {
             "name": "Commentaires",
