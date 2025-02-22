@@ -71,7 +71,7 @@ class CommentController extends Controller
         }
 
         $comment = Comment::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'plan_id' => $request->plan_id,
             'comment' => $request->comment
         ]);
@@ -168,7 +168,7 @@ class CommentController extends Controller
         }
 
         $comment->update([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::id(),
             'plan_id' => $request->plan_id,
             'comment' => $request->comment
         ]);

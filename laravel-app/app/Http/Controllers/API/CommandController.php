@@ -32,7 +32,8 @@ class CommandController extends Controller
     public function index()
     {
         $commands = Command::with(['user'])
-                         ->get();
+                            ->where('user_id', Auth::id())
+                            ->get();
 
         return response()->json([
             'success' => true,

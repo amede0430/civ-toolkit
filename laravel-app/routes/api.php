@@ -7,6 +7,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\RatingController;
 use App\Http\Controllers\API\CommandController;
+use App\Http\Controllers\API\PaymentController;
 //use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('customer')->middleware('customer')->group(function () {
         Route::apiResource('commands', CommandController::class);
         Route::get('commands/{token}/validate/{answer}', [CommandController::class, 'validateCommand']);
+        Route::apiResource('payments', PaymentController::class);
+        Route::post('payments/verify', [PaymentController::class, 'verifyPayment']);
     });
 
     // Groupe pour les ingénieurs (engineer)
@@ -52,6 +55,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('categories', CategorieController::class);
         Route::apiResource('engineers', UserController::class);
         Route::post('accept/plan/{plan_id}', [UserController::class, 'accept_plan' ]);
-        Route::post('commands/{command_id}/process', [CommandController::class, 'processCommand' ]);
+        Route::post('commands/{command_id}/process', [CommandController::class, 'processCommand']);
     });
 });

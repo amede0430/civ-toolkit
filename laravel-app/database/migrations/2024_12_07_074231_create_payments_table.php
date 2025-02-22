@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
+            $table->enum('product_type', ['plan', 'command']);
             $table->unsignedDecimal('amount');
-            $table->string('payment_method');
+            $table->string('method'); // momo, carte, paypal...
             $table->string('reference')->unique();
+            $table->enum('command_state', ['first_half', 'second_half'])->nullable();
+            $table->boolean('paid')->default(false);
 
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->timestamps(); // payment_date == created_at

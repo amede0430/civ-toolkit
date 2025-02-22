@@ -88,7 +88,7 @@ class RatingController extends Controller
         $rating = Rating::updateOrCreate(
             [
                 'plan_id' => $request->plan_id,
-                'user_id' => Auth::user()->id,
+                'user_id' => Auth::id(),
             ],
             ['rating' => $request->rating]
         );

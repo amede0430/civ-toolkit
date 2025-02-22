@@ -81,7 +81,7 @@ class PlanController extends Controller
     public function store(Request $request)
     {
         // Validation des données
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -93,6 +93,13 @@ class PlanController extends Controller
             'zip_path' => 'required|mimes:zip,rar|max:10240',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                // 'success' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
+
         // Enregistrement des fichiers dans les répertoires appropriés
         $coverPath = $request->file('cover_path')->store('covers', 'public');
         $pdfPath = $request->file('pdf_path')->store('pdfs', 'public');
@@ -101,11 +108,11 @@ class PlanController extends Controller
         // Création du plan avec les chemins des fichiers
         $plan = [
             'user_id' => Auth::id(),
-            'category_id' => $validated['category_id'],
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'price' => $validated['price'],
-            'free' => $validated['free'],
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'description' => $request->description,
+            'price' => $request->price,
+            'free' => $request->free,
             'cover_path' => $coverPath,
             'pdf_path' => $pdfPath,
             'zip_path' => $zipPath,

@@ -12,9 +12,12 @@ class Payment extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'product_type',
         'amount',
-        'payment_method',
+        'method',
         'reference',
+        'command_state',
+        'paid',
     ];
 
     public function user()
